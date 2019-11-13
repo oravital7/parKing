@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">parKing</string>
+    <string name="rentBtn">Find closet parking now!</string>
+    <string name="parkingSearch">Find your lovely parking by search</string>
 </resources>
