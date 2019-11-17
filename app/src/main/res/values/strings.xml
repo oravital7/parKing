@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">parKing</string>
-    <string name="rentBtn">Find closet parking now!</string>
+    <string name="rentBtn">Find your closet parking now!</string>
     <string name="parkingSearch">Find your lovely parking by search</string>
+    <string name="title_activity_customer__maps">Map</string>
+    <string name="customer_start_rent">Start</string>
+    <string name="customer_end_rent">End</string>
+    <string name="customer_hours_map">Hours</string>
+    <string name="Adress_city">Enter Address, City</string>
+    <string name="ic_search">ic_search</string>
 </resources>
