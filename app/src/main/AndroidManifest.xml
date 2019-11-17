@@ -12,9 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Login"
-            android:exported="true"></activity>
-        <activity android:name=".Register" />
+        <activity android:name=".Registration"
+            android:exported="true"
+            />
+        <activity
+            android:name=".Login"
+            android:exported="true" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -22,10 +25,11 @@
 
         <activity
             android:name=".customer.customer_MapsActivity"
-            android:label="@string/title_activity_customer__maps"></activity>
+            android:label="@string/title_activity_customer__maps" />
         <activity
             android:name=".customer.customer_main_activity"
             android:exported="true" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
