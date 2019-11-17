@@ -59,17 +59,18 @@ public class Registration extends AppCompatActivity {
 
         // Take the value of two edit texts in Strings
         String email, password;
+        String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
         email = emailTextView.getText().toString();
         password = passwordTextView.getText().toString();
-
-        // Validations for input email and password
-        if (TextUtils.isEmpty(email)) {
+        
+        if (!email.matches(regex)) {
             Toast.makeText(getApplicationContext(),
-                    "Please enter email!!",
+                    "Please enter a valid email!",
                     Toast.LENGTH_LONG)
                     .show();
             return;
         }
+
         if (TextUtils.isEmpty(password)) {
             Toast.makeText(getApplicationContext(),
                     "Please enter password!!",
