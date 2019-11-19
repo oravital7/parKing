@@ -13,11 +13,12 @@ import androidx.fragment.app.Fragment;
 import com.fun.parking.R;
 
 public class PriceSetting extends Fragment {
-    Button finish;
+    Button bPost;
+
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View myVeiw = inflater.inflate(R.layout.business_price, container, false);
-        finish=myVeiw.findViewById(R.id.ok);
-        finish.setOnClickListener(new View.OnClickListener() {
+        bPost = myVeiw.findViewById(R.id.ok);
+        bPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
