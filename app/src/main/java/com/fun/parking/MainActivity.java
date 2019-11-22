@@ -1,9 +1,11 @@
 package com.fun.parking;
 
+import android.net.wifi.hotspot2.pps.Credential;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,19 +27,27 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-//        mAuth.createUserWithEmailAndPassword("dana@gma.com", "1234")
-//                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                                           @Override
-//                                           public void onComplete(@NonNull Task<AuthResult> task) {
-//                                               if (task.isSuccessful())
-//                                                   Toast.makeText(MainActivity.this, "connected!", Toast.LENGTH_LONG).show();
-//                                               else
-//                                                   Toast.makeText(MainActivity.this, "not connected", Toast.LENGTH_LONG).show();
-//                                           }
-//                                       });
-//
-        
+//         Check if user is signed in (non-null) and update UI accordingly.
+        mAuth.createUserWithEmailAndPassword("dana@gmail.com", "1234")
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                           @Override
+                                           public void onComplete(@NonNull Task<AuthResult> task) {
+                                               if (task.isSuccessful())
+                                                   Toast.makeText(MainActivity.this, "connected!", Toast.LENGTH_LONG).show();
+                                               else
+                                               {
+                                                   Toast.makeText(MainActivity.this, "not connected " + task.getException(), Toast.LENGTH_LONG).show();
+
+                                               }
+                                           }
+                                       }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MainActivity.this, "not connected " + e.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+        });
+
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         if (currentUser != null)
