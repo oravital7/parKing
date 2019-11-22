@@ -17,7 +17,7 @@ public class IconMakerFactory {
 
     private void init()
     {
-        iconFactory.setStyle(IconGenerator.STYLE_GREEN);
+        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
     }
 
     public MarkerOptions CreateIcon(String text, LatLng latLng)
