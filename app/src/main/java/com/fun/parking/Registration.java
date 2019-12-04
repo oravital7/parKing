@@ -42,7 +42,7 @@ public class Registration extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
 
         mFullName   = findViewById(R.id.name);
-        mEmail      = findViewById(R.id.email);
+        mEmail      = findViewById(R.id.Email);
         mPassword   = findViewById(R.id.password);
         mPhone      = findViewById(R.id.phone);
         mRegisterBtn= findViewById(R.id.btnregister);
@@ -52,10 +52,10 @@ public class Registration extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
 //        progressBar = findViewById(R.id.progressBar);
 
-        if(fAuth.getCurrentUser() != null){
-           startActivity(new Intent(getApplicationContext(),MainActivity.class));
-           finish();
-        }
+//        if(fAuth.getCurrentUser() != null){
+//           startActivity(new Intent(getApplicationContext(),MainActivity.class));
+//           finish();
+//        }
 
 
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {

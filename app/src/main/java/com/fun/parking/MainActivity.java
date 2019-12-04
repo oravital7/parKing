@@ -1,88 +1,55 @@
 package com.fun.parking;
-
-import android.net.wifi.hotspot2.pps.Credential;
-import android.os.Bundle;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
-    private FirebaseAuth mAuth;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+
+import javax.annotation.Nullable;
+
+public class MainActivity extends AppCompatActivity {
+    TextView fullName,email,phone;
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
+    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser  =mAuth.getCurrentUser();
-        if (currentUser != null)
-            Toast.makeText(this, "in!", Toast.LENGTH_LONG).show();
-        else
-            Toast.makeText(this, "out!", Toast.LENGTH_LONG).show();
+        phone = findViewById(R.id.profilePhone);
+        fullName = findViewById(R.id.profileName);
+        email    = findViewById(R.id.profileEmail);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-       //DatabaseReference myRef = database.getReferenc
+        fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
 
-       //
-//        myRef.setValue("Hello, World!");
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
-//         Check if user is signed in (non-null) and update UI accordingly.
-        mAuth.createUserWithEmailAndPassword("dana@gmail.com", "1234")
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                           @Override
-                                           public void onComplete(@NonNull Task<AuthResult> task) {
-                                               if (task.isSuccessful())
-                                                   Toast.makeText(MainActivity.this, "connected!", Toast.LENGTH_LONG).show();
-                                               else
-                                               {
-                                                   Toast.makeText(MainActivity.this, "not connected " + task.getException(), Toast.LENGTH_LONG).show();
+        userId = fAuth.getCurrentUser().getUid();
 
-                                               }
-                                           }
-                                       }).addOnFailureListener(new OnFailureListener() {
+        DocumentReference documentReference = fStore.collection("users").document(userId);
+        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(MainActivity.this, "not connected " + e.getMessage(), Toast.LENGTH_LONG).show();
-
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                phone.setText(documentSnapshot.getString("phone"));
+                fullName.setText(documentSnapshot.getString("fName"));
+                email.setText(documentSnapshot.getString("email"));
             }
         });
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-       //  Check if user is signed in (non-null) and update UI accordingly.
-//        mAuth.createUserWithEmailAndPassword("dana@gmai.com", "12Sidnid34")
-//                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                                           @Override
-//                                           public void onComplete(@NonNull Task<AuthResult> task) {
-//                                               if (task.isSuccessful())
-//                                                   Toast.makeText(MainActivity.this, "connected!", Toast.LENGTH_LONG).show();
-//                                               else
-//                                                   Toast.makeText(MainActivity.this, "not connected", Toast.LENGTH_LONG).show();
-//                                           }
-//                                       });
-
-        //mAuth.signOut();
-//        mAuth.signInWithEmailAndPassword("dana@gmai.com", "12Sidnid34");
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//
-//        if (currentUser != null)
-//            Toast.makeText(this, "in!", Toast.LENGTH_LONG).show();
-//        else
-//            Toast.makeText(this, "out!", Toast.LENGTH_LONG).show();
 
     }
 
+    public void logout(View view) {
+        FirebaseAuth.getInstance().signOut();//logout
+        startActivity(new Intent(getApplicationContext(),Login.class));
+        finish();
+    }
 }

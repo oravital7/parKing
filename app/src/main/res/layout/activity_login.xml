@@ -22,7 +22,7 @@
 
     <!-- Edit text for email -->
     <EditText
-        android:id="@+id/email"
+        android:id="@+id/Email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter your Email" />
@@ -37,15 +37,24 @@
 
     <!-- Button for Login with text "Login" -->
     <Button
-        android:id="@+id/login"
+        android:id="@+id/loginBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Login" />
 
     <!-- ProgressBar for Loading Time -->
+
+    <TextView
+        android:id="@+id/createText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="new here? create a new account"
+        android:textAlignment="center" />
+
     <ProgressBar
         android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone" />
+        android:visibility="invisible" />
 </LinearLayout>
