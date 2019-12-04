@@ -20,14 +20,27 @@
 
     <!-- Edit text for email -->
     <EditText
-        android:id="@+id/email"
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your Name" />
+
+    <EditText
+        android:id="@+id/phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter phone number" />
+
+    <EditText
+        android:id="@+id/Email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter your Email" />
 
     <!-- Edit text for password -->
+
     <EditText
-        android:id="@+id/passwd"
+        android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter your Password"
@@ -41,9 +54,4 @@
         android:text="Register" />
 
     <!-- ProgressBar for loading time -->
-    <ProgressBar
-        android:id="@+id/progressbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
 </LinearLayout>
