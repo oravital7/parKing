@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.fun.parking.R;
 
-public class customer_main_activity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -23,6 +23,6 @@ public class customer_main_activity extends AppCompatActivity {
     {
         Log.d("RentBtn", "pressed");
         Toast.makeText(this, "RentBtn", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(this, customer_MapsActivity.class));
+        startActivity(new Intent(this, MapActivity.class));
     }
 }

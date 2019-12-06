@@ -1,5 +1,6 @@
 package com.fun.parking.customer;
 
+import com.fun.parking.R;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -22,9 +23,8 @@ public class IconMakerFactory {
 
     public MarkerOptions CreateIcon(String text, LatLng latLng)
     {
-        MarkerOptions markerOptionsicon = new MarkerOptions().
-                icon(BitmapDescriptorFactory.fromBitmap(iconFactory.makeIcon(text))).
-                position(latLng).title("blab afa lfas dlas d\n adsa ");
-         return markerOptionsicon;
+        return new MarkerOptions().
+                icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_parking/*iconFactory.makeIcon(text)*/)).
+                position(latLng).title("Name: Or Avital, Address: Tel Aviv ").snippet("Hi there");
     }
 }
