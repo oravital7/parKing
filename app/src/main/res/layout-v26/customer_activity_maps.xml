@@ -25,27 +25,33 @@
         android:elevation="20dp"
         android:id="@+id/relLayoutSearch" >
 
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:id="@+id/customer_ic_search"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/ic_search_black_25dp"
-            android:contentDescription="@string/ic_search" />
+<!--        <ImageView-->
+<!--            android:layout_width="15dp"-->
+<!--            android:layout_height="15dp"-->
+<!--            android:id="@+id/customer_ic_search"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            android:src="@drawable/ic_search_black_25dp"-->
+<!--            android:contentDescription="@string/ic_search" />-->
 
-        <EditText
+<!--        <EditText-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_toEndOf="@id/customer_ic_search"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:textSize="15sp"-->
+<!--            android:textColor="#000"-->
+<!--            android:id="@+id/input_search"-->
+<!--            android:background="@null"-->
+<!--            android:hint="@string/Adress_city"-->
+<!--            android:autofillHints=""-->
+<!--            android:inputType="textPostalAddress" />-->
+
+        <fragment android:id="@+id/autocomplete_fragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toEndOf="@id/customer_ic_search"
-            android:layout_centerVertical="true"
-            android:textSize="15sp"
-            android:textColor="#000"
-            android:id="@+id/input_search"
-            android:background="@null"
-            android:hint="@string/Adress_city"
-            android:autofillHints=""
-            android:inputType="textPostalAddress" />
+            android:layout_height="wrap_content"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            />
 
     </RelativeLayout>
 

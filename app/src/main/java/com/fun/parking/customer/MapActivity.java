@@ -5,17 +5,20 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import com.fun.parking.R;
 import com.fun.parking.customer.pickers.DatePickerFragment;
 import com.fun.parking.customer.pickers.TimePickerFragment;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
@@ -26,19 +29,35 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.maps.android.ui.IconGenerator;
 
 import org.w3c.dom.Text;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private FirebaseFirestore mFstore;
     private FusedLocationProviderClient mfusedLocationClient;
-    private int mStartDate[], mEndDate[], mStartTime[], mEndTime[];
+    private Calendar mStartDatec, mEndDatec;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,10 +65,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.customer_activity_maps);
         mfusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mStartDate = new int[3];
-        mEndDate = new int[3];
-        mStartTime = new int[2];
-        mEndTime = new int[2];
+        mFstore = FirebaseFirestore.getInstance();
+
         resetTimes();
         UpdateTexts();
 
@@ -57,18 +74,48 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        initAutoCompletePlaces();
+    }
+
+    private void initAutoCompletePlaces()
+    {
+        String apiKey = "AIzaSyAarkT-eBapC-ZCiJfGxvJGgOZlxfjMXlc";
+
+        // Initialize the SDK
+        Places.initialize(getApplicationContext(), apiKey);
+
+        // Create a new Places client instance
+        PlacesClient placesClient = Places.createClient(this);
+
+        // Initialize the AutocompleteSupportFragment.
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+        // Specify the types of place data to return.
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+
+        // Set up a PlaceSelectionListener to handle the response.
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                Log.i("infoOR", "Place: " + place.getName() + ", " + place.getId());
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i("infoOR", "An error occurred: " + status);
+            }
+        });
     }
 
     private void resetTimes()
     {
-        Calendar calendar = Calendar.getInstance();
-        mEndDate[0] = mStartDate[0] = calendar.get(Calendar.DAY_OF_MONTH);
-        mEndDate[1] = mStartDate[1] = calendar.get(Calendar.MONTH) + 1;
-        mEndDate[2] = mStartDate[2] = calendar.get(Calendar.YEAR);
-
-        mEndTime[0] = mStartTime[0] = calendar.get(Calendar.HOUR_OF_DAY);
-        mEndTime[1] = mStartTime[1] = calendar.get(Calendar.MINUTE);
-        mEndTime[0]++;
+        mStartDatec = Calendar.getInstance(); // Need to be change to correct timeZone such utc + 2
+        mEndDatec = Calendar.getInstance();
+        mEndDatec.set(Calendar.HOUR_OF_DAY, mEndDatec.get(Calendar.HOUR_OF_DAY) + 1);
     }
 
     public void UpdateTexts()
@@ -79,42 +126,32 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         EditText endTime = findViewById(R.id.endTime);
         TextView hours = findViewById(R.id.hoursView);
 
-        checkDateAndTime();
+        if (mEndDatec.compareTo(mStartDatec) < 0)
+            mEndDatec = (Calendar) mStartDatec.clone();
 
-        if (mStartDate[2] == mEndDate[2] && mStartDate[1] == mEndDate[1])
-            hours.setText("" + ((mEndDate[0] - mStartDate[0]) * 24 + mEndTime[0] - mStartTime[0]));
+        if (mStartDatec.get(Calendar.YEAR) == mEndDatec.get(Calendar.YEAR) &&
+                mStartDatec.get(Calendar.MONTH) == mEndDatec.get(Calendar.MONTH))
+        {
+            hours.setText("" + ((mEndDatec.get(Calendar.DAY_OF_MONTH) -
+                    mStartDatec.get(Calendar.DAY_OF_MONTH)) * 24 +
+                    mEndDatec.get(Calendar.HOUR_OF_DAY) - mStartDatec.get(Calendar.HOUR_OF_DAY)));
+        }
         else
             hours.setText("");
 
-        String minutes = mStartTime[1] < 10 ? "0" + mStartTime[1] : "" + mStartTime[1];
+        String minutes = mStartDatec.get(Calendar.MINUTE) < 10 ? "0" +
+                mStartDatec.get(Calendar.MINUTE) : "" + mStartDatec.get(Calendar.MINUTE);
 
-        startDate.setText(mStartDate[0] + " / " + mStartDate[1] + " / " + mStartDate[2]);
-        startTime.setText(mStartTime[0] + " : " + minutes);
+        startDate.setText(mStartDatec.get(Calendar.DAY_OF_MONTH) + " / " +
+                (mStartDatec.get(Calendar.MONTH) + 1) + " / " + mStartDatec.get(Calendar.YEAR));
+        startTime.setText(mStartDatec.get(Calendar.HOUR_OF_DAY) + " : " + minutes);
 
-        minutes = mEndTime[1] < 10 ? "0" + mEndTime[1] : "" + mEndTime[1];
+        minutes = mEndDatec.get(Calendar.MINUTE) < 10 ? "0" +
+                mEndDatec.get(Calendar.MINUTE) : "" + mEndDatec.get(Calendar.MINUTE);
 
-        endDate.setText(mEndDate[0] + " / " + mEndDate[1] + " / " + mEndDate[2]);
-        endTime.setText(mEndTime[0] + " : " + minutes);
-    }
-
-    private void checkDateAndTime()
-    {
-        if (mStartDate[2] > mEndDate[2] || (mStartDate[2] == mEndDate[2] &&
-                (mStartDate[1] > mEndDate[1] || (mStartDate[1] == mEndDate[1] &&
-                        (mStartDate[0] > mEndDate[0] || (mStartDate[0]  == mEndDate[0] && (mStartTime[0] > mEndTime[0]
-                        || (mStartTime[0] == mEndTime[0] && mStartTime[1] > mStartTime[1]))))))))
-        {
-            for (int i = 0; i < mStartDate.length; i++)
-            {
-                mEndDate[i] = mStartDate[i];
-
-                if (i < mStartTime.length)
-                    mEndTime[i] = mStartTime[i];
-            }
-
-        }
-
-
+        endDate.setText(mEndDatec.get(Calendar.DAY_OF_MONTH) + " / " +
+                (mEndDatec.get(Calendar.MONTH) + 1) + " / " + mEndDatec.get(Calendar.YEAR));
+        endTime.setText(mEndDatec.get(Calendar.HOUR_OF_DAY) + " : " + minutes);
     }
 
     @Override
@@ -131,8 +168,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Log.e("customer_map", "Can't find style. Error: ", e);
         }
 
-
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
+        {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 Toast.makeText(MapActivity.this, "Click on: " +
@@ -140,6 +177,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 return false;
             }
         });
+
+        addAvailableParkingMarkers();
 
         // Add a marker in Sydney and move the camera
         LatLng roshHaain = new LatLng(32.091410, 34.976780);
@@ -175,32 +214,79 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(telAviv, 16.0f));
     }
 
+    private void addAvailableParkingMarkers()
+    {
+        mMap.clear();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        mFstore.setFirestoreSettings(settings);
+
+
+//        mFstore.collection("availables parking")
+//                .whereGreaterThan("Rent.Start", mStartDatec.getTimeInMillis())
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                Log.d("Or Map: ", document.getId() + " => " + document.getData());
+//                            }
+//                        } else {
+//                            Log.d("Or Map: ", "Error getting documents: ", task.getException());
+//                        }
+//                    }
+//                });
+
+        mFstore.collection("availables parking")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("Or Map: ", document.getId() + " => " + document.getData());
+                            }
+                        } else {
+                            Log.d("Or Map: ", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
+
     public void ShowHideBtn(View v)
     {
-        Toast.makeText(this, "Show/Hide", Toast.LENGTH_SHORT).show();
+        Button showHideBtn = (Button)v;
         RelativeLayout layout = findViewById(R.id.customer_options_layout);
+
         if (layout.getVisibility() == View.VISIBLE)
+        {
             layout.setVisibility(View.INVISIBLE);
+            showHideBtn.setText("show");
+        }
         else
+        {
             layout.setVisibility(View.VISIBLE);
+            showHideBtn.setText("hide");
+        }
     }
 
     public void DatePicker(View v)
     {
-        int date[] = mStartDate;
-        if (v.getId() == R.id.endDate) date = mEndDate;
+        Calendar calendar = mStartDatec;
+        if (v.getId() == R.id.endDate) calendar = mEndDatec;
 
-        DialogFragment newFragment = new DatePickerFragment(this, date);
-        newFragment.show(getSupportFragmentManager(), "timePicker");
-
+        DialogFragment newFragment = new DatePickerFragment(this, calendar);
+        newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
     public void TimePicker(View v)
     {
-        int time[] = mStartTime;
-        if (v.getId() == R.id.endTime) time = mEndTime;
+        Calendar calendar = mStartDatec;
+        if (v.getId() == R.id.endTime) calendar = mEndDatec;
 
-        DialogFragment newFragment = new TimePickerFragment(this, time);
+        DialogFragment newFragment = new TimePickerFragment(this, calendar);
         newFragment.show(getSupportFragmentManager(), "timePicker");
     }
 }
