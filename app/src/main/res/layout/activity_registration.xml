@@ -76,5 +76,11 @@
         android:layout_height="wrap_content"
         android:text="Register" />
 
+    <TextView
+        android:id="@+id/loginLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="already registered? log in" />
+
     <!-- ProgressBar for loading time -->
 </LinearLayout>

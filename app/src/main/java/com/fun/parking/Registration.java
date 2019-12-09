@@ -30,7 +30,7 @@ public class Registration extends AppCompatActivity {
     public static final String TAG = "TAG";
     EditText mFullName,mEmail,mPassword,mPhone,mCountry,mStreet,mCity,mHouseNumber;
     Button mRegisterBtn;
-    TextView mLoginBtn;
+    TextView mLoginLink;
     FirebaseAuth fAuth;
     ProgressBar progressBar;
     FirebaseFirestore fStore;
@@ -51,7 +51,7 @@ public class Registration extends AppCompatActivity {
         mStreet= findViewById(R.id.street);
         mCity= findViewById(R.id.city);
         mHouseNumber= findViewById(R.id.houseNumber);
-
+        mLoginLink = findViewById(R.id.loginLink);
         //mLoginBtn   = findViewById(R.id.createText);
 
         fAuth = FirebaseAuth.getInstance();
@@ -78,7 +78,7 @@ public class Registration extends AppCompatActivity {
                 final String houseNumber    = mHouseNumber.getText().toString();
 
              //   final String
-                if(TextUtils.isEmpty(email)){
+                if(TextUtils.isEmpty(email)|| !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
                     mEmail.setError("Email is Required.");
                     return;
                 }
@@ -137,6 +137,13 @@ public class Registration extends AppCompatActivity {
             }
         });
 
+        mLoginLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),Login.class));
+            }
+        });
+
 
 
 //        mLoginBtn.setOnClickListener(new View.OnClickListener() {
@@ -145,6 +152,7 @@ public class Registration extends AppCompatActivity {
 //                startActivity(new Intent(getApplicationContext(),Login.class));
 //            }
 //        });
+
 
     }
 }
