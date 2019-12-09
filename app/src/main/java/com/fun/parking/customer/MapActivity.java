@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,10 +58,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.customer_activity_maps);
         mfusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mFstore = FirebaseFirestore.getInstance();
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setTimestampsInSnapshotsEnabled(true)
-                .build();
-        mFstore.setFirestoreSettings(settings);
+//        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+//                .setTimestampsInSnapshotsEnabled(true)
+//                .build();
+//        mFstore.setFirestoreSettings(settings);
 
         resetTimes();
 
@@ -210,7 +209,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         final IconMakerFactory iconMaker = new IconMakerFactory(new IconGenerator(this));
 
 
-        map_window_info_customize customInfoWindow = new map_window_info_customize(this);
+        MapWindowInfoCustomize customInfoWindow = new MapWindowInfoCustomize(this);
         mMap.setInfoWindowAdapter(customInfoWindow);
 
 
