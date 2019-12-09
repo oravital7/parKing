@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         mRent= findViewById(R.id.rent);
         mFind = findViewById(R.id.findParking);
 
+
 //        mFind.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -29,6 +30,21 @@ public class MainActivity extends AppCompatActivity {
 //                startActivity(intent);
 //            }
 //        });
+
+        mFind.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), BusinessMainActivity.class));
+            }
+        });
+
+        mRent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), com.fun.parking.customer.MainActivity.class));
+            }
+        });
+
 
 
 
