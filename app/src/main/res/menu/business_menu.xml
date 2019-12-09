@@ -7,9 +7,9 @@
 
             android:title="Dates" />
         <item
-            android:id="@+id/nav_chat"
+            android:id="@+id/setting"
 
-            android:title="Rent Your parking" />
+            android:title="setting" />
         <item
             android:id="@+id/nav_profile"
 

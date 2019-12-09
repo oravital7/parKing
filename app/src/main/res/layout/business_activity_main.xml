@@ -5,27 +5,66 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:fitsSystemWindows="true"
     tools:context=".business.BusinessMainActivity"
-    tools:openDrawer="start">
+    tools:openDrawer="start"
 
+    >
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"></androidx.appcompat.widget.Toolbar>
+
 
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:elevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="718dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="50dp">
+
+
+                <Button
+                    android:id="@+id/off_on_vacation"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="-2dp"
+                    android:layout_marginBottom="-20dp"
+                    android:background="@drawable/customer_find_now_btn_bg_round"
+                    android:clickable="true"
+                    android:text="off on vacation"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="23dp"
+                android:background="@drawable/business_menu"
+                android:elevation="4dp"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"></androidx.appcompat.widget.Toolbar>
+
+            <TextView
+                android:id="@+id/welcome"
+                android:layout_width="255dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="-20dp"
+                android:layout_marginBottom="200dp"
+                android:layout_weight="1"
+                android:text="Welcome!" />
+
+
+        </FrameLayout>
+
 
     </LinearLayout>
 
