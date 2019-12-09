@@ -30,7 +30,7 @@ public class IconMakerFactory {
         String title = makeTitle(document);
         return new MarkerOptions().
                 icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_parking/*iconFactory.makeIcon(text)*/)).
-                position(latLng).title(title).snippet("Price per Hour: " + document.get("Price"));
+                position(latLng).title(title).snippet("Price per hour: ₪" + document.get("Price"));
     }
 
     private String makeTitle(QueryDocumentSnapshot document)

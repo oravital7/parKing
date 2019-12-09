@@ -40,7 +40,7 @@ public class PickDate extends Fragment {
         timeEndText = (EditText) myVeiw.findViewById(R.id.timeTend);
         dateBend = (ImageButton) myVeiw.findViewById(R.id.dateBend);
         timeBend = (ImageButton) myVeiw.findViewById(R.id.timeBend);
-        price = myVeiw.findViewById(R.id.price);
+        price = myVeiw.findViewById(R.id.mapPrice);
         timeStartText.setText("Time:");
         dateStartText.setText("Date:");
         timeEndText.setText("Time:");
