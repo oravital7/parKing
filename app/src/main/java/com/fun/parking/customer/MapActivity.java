@@ -37,27 +37,22 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.maps.android.ui.IconGenerator;
 
-import org.w3c.dom.Text;
-
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private FirebaseFirestore mFstore;
     private FusedLocationProviderClient mfusedLocationClient;
-    private Calendar mStartDatec, mEndDatec;
+    private Calendar mStartDate, mEndDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -66,9 +61,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.customer_activity_maps);
         mfusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mFstore = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        mFstore.setFirestoreSettings(settings);
 
         resetTimes();
-        UpdateTexts();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -113,9 +111,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void resetTimes()
     {
-        mStartDatec = Calendar.getInstance(); // Need to be change to correct timeZone such utc + 2
-        mEndDatec = Calendar.getInstance();
-        mEndDatec.set(Calendar.HOUR_OF_DAY, mEndDatec.get(Calendar.HOUR_OF_DAY) + 1);
+        mStartDate = Calendar.getInstance(); // Need to be change to correct timeZone such utc + 2
+        mEndDate = Calendar.getInstance();
+        mEndDate.set(Calendar.HOUR_OF_DAY, mEndDate.get(Calendar.HOUR_OF_DAY) + 1);
     }
 
     public void UpdateTexts()
@@ -126,32 +124,34 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         EditText endTime = findViewById(R.id.endTime);
         TextView hours = findViewById(R.id.hoursView);
 
-        if (mEndDatec.compareTo(mStartDatec) < 0)
-            mEndDatec = (Calendar) mStartDatec.clone();
+        if (mEndDate.compareTo(mStartDate) < 0)
+            mEndDate = (Calendar) mStartDate.clone();
 
-        if (mStartDatec.get(Calendar.YEAR) == mEndDatec.get(Calendar.YEAR) &&
-                mStartDatec.get(Calendar.MONTH) == mEndDatec.get(Calendar.MONTH))
+        if (mStartDate.get(Calendar.YEAR) == mEndDate.get(Calendar.YEAR) &&
+                mStartDate.get(Calendar.MONTH) == mEndDate.get(Calendar.MONTH))
         {
-            hours.setText("" + ((mEndDatec.get(Calendar.DAY_OF_MONTH) -
-                    mStartDatec.get(Calendar.DAY_OF_MONTH)) * 24 +
-                    mEndDatec.get(Calendar.HOUR_OF_DAY) - mStartDatec.get(Calendar.HOUR_OF_DAY)));
+            hours.setText("" + ((mEndDate.get(Calendar.DAY_OF_MONTH) -
+                    mStartDate.get(Calendar.DAY_OF_MONTH)) * 24 +
+                    mEndDate.get(Calendar.HOUR_OF_DAY) - mStartDate.get(Calendar.HOUR_OF_DAY)));
         }
         else
             hours.setText("");
 
-        String minutes = mStartDatec.get(Calendar.MINUTE) < 10 ? "0" +
-                mStartDatec.get(Calendar.MINUTE) : "" + mStartDatec.get(Calendar.MINUTE);
+        String minutes = mStartDate.get(Calendar.MINUTE) < 10 ? "0" +
+                mStartDate.get(Calendar.MINUTE) : "" + mStartDate.get(Calendar.MINUTE);
 
-        startDate.setText(mStartDatec.get(Calendar.DAY_OF_MONTH) + " / " +
-                (mStartDatec.get(Calendar.MONTH) + 1) + " / " + mStartDatec.get(Calendar.YEAR));
-        startTime.setText(mStartDatec.get(Calendar.HOUR_OF_DAY) + " : " + minutes);
+        startDate.setText(mStartDate.get(Calendar.DAY_OF_MONTH) + " / " +
+                (mStartDate.get(Calendar.MONTH) + 1) + " / " + mStartDate.get(Calendar.YEAR));
+        startTime.setText(mStartDate.get(Calendar.HOUR_OF_DAY) + " : " + minutes);
 
-        minutes = mEndDatec.get(Calendar.MINUTE) < 10 ? "0" +
-                mEndDatec.get(Calendar.MINUTE) : "" + mEndDatec.get(Calendar.MINUTE);
+        minutes = mEndDate.get(Calendar.MINUTE) < 10 ? "0" +
+                mEndDate.get(Calendar.MINUTE) : "" + mEndDate.get(Calendar.MINUTE);
 
-        endDate.setText(mEndDatec.get(Calendar.DAY_OF_MONTH) + " / " +
-                (mEndDatec.get(Calendar.MONTH) + 1) + " / " + mEndDatec.get(Calendar.YEAR));
-        endTime.setText(mEndDatec.get(Calendar.HOUR_OF_DAY) + " : " + minutes);
+        endDate.setText(mEndDate.get(Calendar.DAY_OF_MONTH) + " / " +
+                (mEndDate.get(Calendar.MONTH) + 1) + " / " + mEndDate.get(Calendar.YEAR));
+        endTime.setText(mEndDate.get(Calendar.HOUR_OF_DAY) + " : " + minutes);
+
+        addAvailableParkingMarkers();
     }
 
     @Override
@@ -178,11 +178,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-        addAvailableParkingMarkers();
-
-        // Add a marker in Sydney and move the camera
-        LatLng roshHaain = new LatLng(32.091410, 34.976780);
-        LatLng telAviv = new LatLng(31.928289, 34.796131);
+        UpdateTexts();
 
         mfusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
@@ -194,22 +190,24 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                 new LatLng(location.getLatitude(), location.getLongitude())));
                     }
                 });
+
         IconMakerFactory iconMaker = new IconMakerFactory(new IconGenerator(this));
 
-        InfoWindowData info = new InfoWindowData();
-        info.setImage("snowqualmie")
-        .setHotel("Hotel : excellent hotels available")
-        .setFood("Food : all types of restaurants available")
-        .setTransport("Reach the site by bus, car and train.");
-
-        map_window_info_customize customInfoWindow = new map_window_info_customize(this);
+//        InfoWindowData info = new InfoWindowData();
+//        info.setImage("snowqualmie")
+//        .setHotel("Hotel : excellent hotels available")
+//        .setFood("Food : all types of restaurants available")
+//        .setTransport("Reach the site by bus, car and train.");
+//
+//        map_window_info_customize customInfoWindow = new map_window_info_customize(this);
 //        mMap.setInfoWindowAdapter(customInfoWindow);
 
+        LatLng telAviv = new LatLng(32.1005821, 34.8817902);
 
-        mMap.addMarker(iconMaker.CreateIcon("500$", telAviv)).showInfoWindow();
-        mMap.addMarker(iconMaker.CreateIcon("300", roshHaain)).showInfoWindow();
-        mMap.addMarker(iconMaker.CreateIcon("250$", new LatLng(31.929125, 34.794872))).showInfoWindow();
-        mMap.addMarker(iconMaker.CreateIcon("100$", new LatLng(31.928371, 34.793839)));
+//        mMap.addMarker(iconMaker.CreateIcon("500$", telAviv)).showInfoWindow();
+//        mMap.addMarker(iconMaker.CreateIcon("300", roshHaain)).showInfoWindow();
+//        mMap.addMarker(iconMaker.CreateIcon("250$", new LatLng(31.929125, 34.794872))).showInfoWindow();
+//        mMap.addMarker(iconMaker.CreateIcon("100$", new LatLng(31.928371, 34.793839)));
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(telAviv, 16.0f));
     }
@@ -217,36 +215,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void addAvailableParkingMarkers()
     {
         mMap.clear();
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setTimestampsInSnapshotsEnabled(true)
-                .build();
-        mFstore.setFirestoreSettings(settings);
 
-
-//        mFstore.collection("availables parking")
-//                .whereGreaterThan("Rent.Start", mStartDatec.getTimeInMillis())
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                Log.d("Or Map: ", document.getId() + " => " + document.getData());
-//                            }
-//                        } else {
-//                            Log.d("Or Map: ", "Error getting documents: ", task.getException());
-//                        }
-//                    }
-//                });
+        final IconMakerFactory iconMaker = new IconMakerFactory(new IconGenerator(this));
 
         mFstore.collection("availables parking")
+                .whereGreaterThanOrEqualTo("Rent.Start", mStartDate.getTime())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("Or Map: ", document.getId() + " => " + document.getData());
+                            for (QueryDocumentSnapshot document : task.getResult())
+                            {
+                                if (document.getDate("Rent.End").compareTo(mEndDate.getTime()) > 0)
+                                {
+                                    mMap.addMarker(iconMaker.CreateIcon(document)).showInfoWindow();
+                                }
                             }
                         } else {
                             Log.d("Or Map: ", "Error getting documents: ", task.getException());
@@ -274,8 +258,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     public void DatePicker(View v)
     {
-        Calendar calendar = mStartDatec;
-        if (v.getId() == R.id.endDate) calendar = mEndDatec;
+        Calendar calendar = mStartDate;
+        if (v.getId() == R.id.endDate) calendar = mEndDate;
 
         DialogFragment newFragment = new DatePickerFragment(this, calendar);
         newFragment.show(getSupportFragmentManager(), "datePicker");
@@ -283,8 +267,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     public void TimePicker(View v)
     {
-        Calendar calendar = mStartDatec;
-        if (v.getId() == R.id.endTime) calendar = mEndDatec;
+        Calendar calendar = mStartDate;
+        if (v.getId() == R.id.endTime) calendar = mEndDate;
 
         DialogFragment newFragment = new TimePickerFragment(this, calendar);
         newFragment.show(getSupportFragmentManager(), "timePicker");
