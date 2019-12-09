@@ -3,7 +3,6 @@ package com.fun.parking.customer.pickers;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.widget.TimePicker;
 
 import androidx.fragment.app.DialogFragment;
@@ -29,7 +28,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         // Create a new instance of TimePickerDialog and return it
         return new TimePickerDialog(getActivity(), this,
                 mCalendar.get(Calendar.HOUR_OF_DAY), mCalendar.get(Calendar.MINUTE),
-                DateFormat.is24HourFormat(getActivity()));
+                true);
     }
 
     @Override

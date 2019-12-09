@@ -34,12 +34,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.maps.android.ui.IconGenerator;
@@ -84,7 +82,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Places.initialize(getApplicationContext(), apiKey);
 
         // Create a new Places client instance
-        PlacesClient placesClient = Places.createClient(this);
+        Places.createClient(this);
 
         // Initialize the AutocompleteSupportFragment.
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
@@ -118,10 +116,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     public void UpdateTexts()
     {
-        EditText startDate = findViewById(R.id.startDate);
-        EditText endDate = findViewById(R.id.endDate);
-        EditText startTime = findViewById(R.id.startTime);
-        EditText endTime = findViewById(R.id.endTime);
+        TextView startDate = findViewById(R.id.startDate);
+        TextView endDate = findViewById(R.id.endDate);
+        TextView startTime = findViewById(R.id.startTime);
+        TextView endTime = findViewById(R.id.endTime);
         TextView hours = findViewById(R.id.hoursView);
 
         if (mEndDate.compareTo(mStartDate) < 0)
@@ -168,13 +166,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Log.e("customer_map", "Can't find style. Error: ", e);
         }
 
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
-        {
+//        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
+//        {
+//            @Override
+//            public boolean onMarkerClick(Marker marker) {
+//                Toast.makeText(MapActivity.this, "Click on: " +
+//                        marker.getTitle(), Toast.LENGTH_SHORT).show();
+//                return false;
+//            }
+//        });
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
-            public boolean onMarkerClick(Marker marker) {
-                Toast.makeText(MapActivity.this, "Click on: " +
-                        marker.getTitle(), Toast.LENGTH_SHORT).show();
-                return false;
+            public void onInfoWindowClick(Marker marker) {
+                Toast.makeText(MapActivity.this, "Parking id: " + marker.getTitle(),
+                        Toast.LENGTH_LONG).show();
             }
         });
 
@@ -191,25 +197,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     }
                 });
 
-        IconMakerFactory iconMaker = new IconMakerFactory(new IconGenerator(this));
 
-//        InfoWindowData info = new InfoWindowData();
-//        info.setImage("snowqualmie")
-//        .setHotel("Hotel : excellent hotels available")
-//        .setFood("Food : all types of restaurants available")
-//        .setTransport("Reach the site by bus, car and train.");
-//
-//        map_window_info_customize customInfoWindow = new map_window_info_customize(this);
-//        mMap.setInfoWindowAdapter(customInfoWindow);
+        LatLng test = new LatLng(32.1005821, 34.8817902);
 
-        LatLng telAviv = new LatLng(32.1005821, 34.8817902);
-
-//        mMap.addMarker(iconMaker.CreateIcon("500$", telAviv)).showInfoWindow();
-//        mMap.addMarker(iconMaker.CreateIcon("300", roshHaain)).showInfoWindow();
-//        mMap.addMarker(iconMaker.CreateIcon("250$", new LatLng(31.929125, 34.794872))).showInfoWindow();
-//        mMap.addMarker(iconMaker.CreateIcon("100$", new LatLng(31.928371, 34.793839)));
-
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(telAviv, 16.0f));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(test, 16.0f));
     }
 
     private void addAvailableParkingMarkers()
@@ -217,6 +208,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap.clear();
 
         final IconMakerFactory iconMaker = new IconMakerFactory(new IconGenerator(this));
+
+
+        map_window_info_customize customInfoWindow = new map_window_info_customize(this);
+        mMap.setInfoWindowAdapter(customInfoWindow);
+
 
         mFstore.collection("availables parking")
                 .whereGreaterThanOrEqualTo("Rent.Start", mStartDate.getTime())
@@ -229,7 +225,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             {
                                 if (document.getDate("Rent.End").compareTo(mEndDate.getTime()) > 0)
                                 {
-                                    mMap.addMarker(iconMaker.CreateIcon(document)).showInfoWindow();
+                                    Marker m = mMap.addMarker(iconMaker.CreateIcon(document));
+                                    InfoWindowData info = new InfoWindowData();
+                                    info.setAddress(document.get("Address.City") + ", " +
+                                            document.get("Address.Street"))
+                                            .setPrice("₪" + document.get("Price") + " per hour");
+
+                                    m.setTag(info);
+                                    m.showInfoWindow();
                                 }
                             }
                         } else {

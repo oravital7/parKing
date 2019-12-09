@@ -25,33 +25,10 @@
         android:elevation="20dp"
         android:id="@+id/relLayoutSearch" >
 
-<!--        <ImageView-->
-<!--            android:layout_width="15dp"-->
-<!--            android:layout_height="15dp"-->
-<!--            android:id="@+id/customer_ic_search"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:layout_marginStart="10dp"-->
-<!--            android:src="@drawable/ic_search_black_25dp"-->
-<!--            android:contentDescription="@string/ic_search" />-->
-
-<!--        <EditText-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_toEndOf="@id/customer_ic_search"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:textSize="15sp"-->
-<!--            android:textColor="#000"-->
-<!--            android:id="@+id/input_search"-->
-<!--            android:background="@null"-->
-<!--            android:hint="@string/Adress_city"-->
-<!--            android:autofillHints=""-->
-<!--            android:inputType="textPostalAddress" />-->
-
         <fragment android:id="@+id/autocomplete_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-            />
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment" />
 
     </RelativeLayout>
 
@@ -121,37 +98,39 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
-        <EditText
+        <TextView
             android:id="@+id/startDate"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="10dp"
-            android:layout_marginBottom="55dp"
+            android:layout_marginBottom="45dp"
             android:ems="10"
             android:hint="Start rent Date"
             android:inputType="date"
             android:onClick="DatePicker"
-            android:textSize="14sp" />
+            android:textSize="17sp" />
 
-        <EditText
+        <TextView
             android:id="@+id/endDate"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="55dp"
+            android:layout_marginStart="61dp"
+            android:layout_marginRight="60dp"
+            android:layout_marginBottom="45dp"
+            android:layout_toEndOf="@+id/startDate"
             android:ems="10"
-            android:inputType="date"
             android:hint="End rent Date"
+            android:inputType="date"
             android:onClick="DatePicker"
-            android:textSize="14sp" />
+            android:textSize="17sp" />
 
-        <EditText
+        <TextView
             android:id="@+id/startTime"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
@@ -161,22 +140,24 @@
             android:inputType="time"
             android:hint="Start rent time"
             android:onClick="TimePicker"
-            android:textSize="14sp" />
+            android:textSize="17sp" />
 
-        <EditText
+        <TextView
             android:id="@+id/endTime"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="60dp"
             android:layout_marginBottom="20dp"
+            android:layout_marginStart="61dp"
+
+            android:layout_toEndOf="@+id/startTime"
             android:ems="10"
-            android:inputType="time"
             android:hint="End rent time"
+            android:inputType="time"
             android:onClick="TimePicker"
-            android:textSize="14sp"
-            />
+            android:textSize="17sp" />
 
     </RelativeLayout>
 

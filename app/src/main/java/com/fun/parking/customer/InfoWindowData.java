@@ -1,51 +1,28 @@
 package com.fun.parking.customer;
 
 public class InfoWindowData {
-    private String image;
-    private String hotel;
-    private String food;
-    private String transport;
+    private String address;
+    private String price;
 
-    public String getImage() {
-        return image;
+    public String getPrice()
+    {
+        return price;
     }
 
-    public InfoWindowData setImage(String image)
+    public String getAddress()
     {
-        this.image = image;
+        return address;
+    }
+
+    public InfoWindowData setAddress(String address)
+    {
+        this.address = address;
         return this;
     }
 
-    public String getHotel()
+    public InfoWindowData setPrice(String price)
     {
-        return hotel;
-    }
-
-    public InfoWindowData setHotel(String hotel)
-    {
-        this.hotel = hotel;
-        return this;
-    }
-
-    public String getFood()
-    {
-        return food;
-    }
-
-    public InfoWindowData setFood(String food)
-    {
-        this.food = food;
-        return this;
-    }
-
-    public String getTransport()
-    {
-        return transport;
-    }
-
-    public InfoWindowData setTransport(String transport)
-    {
-        this.transport = transport;
+        this.price = price;
         return this;
     }
 }
