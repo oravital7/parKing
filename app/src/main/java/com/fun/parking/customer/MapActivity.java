@@ -116,10 +116,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     public void UpdateTexts()
     {
-        EditText startDate = findViewById(R.id.startDate);
-        EditText endDate = findViewById(R.id.endDate);
-        EditText startTime = findViewById(R.id.startTime);
-        EditText endTime = findViewById(R.id.endTime);
+        TextView startDate = findViewById(R.id.startDate);
+        TextView endDate = findViewById(R.id.endDate);
+        TextView startTime = findViewById(R.id.startTime);
+        TextView endTime = findViewById(R.id.endTime);
         TextView hours = findViewById(R.id.hoursView);
 
         if (mEndDate.compareTo(mStartDate) < 0)
@@ -166,13 +166,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Log.e("customer_map", "Can't find style. Error: ", e);
         }
 
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
-        {
+//        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
+//        {
+//            @Override
+//            public boolean onMarkerClick(Marker marker) {
+//                Toast.makeText(MapActivity.this, "Click on: " +
+//                        marker.getTitle(), Toast.LENGTH_SHORT).show();
+//                return false;
+//            }
+//        });
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
-            public boolean onMarkerClick(Marker marker) {
-                Toast.makeText(MapActivity.this, "Click on: " +
-                        marker.getTitle(), Toast.LENGTH_SHORT).show();
-                return false;
+            public void onInfoWindowClick(Marker marker) {
+                Toast.makeText(MapActivity.this, "Parking id: " + marker.getTitle(),
+                        Toast.LENGTH_LONG).show();
             }
         });
 
