@@ -25,27 +25,11 @@
         android:elevation="20dp"
         android:id="@+id/relLayoutSearch" >
 
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:id="@+id/customer_ic_search"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/ic_search_black_25dp"
-            android:contentDescription="@string/ic_search" />
-
-        <EditText
+        <fragment android:id="@+id/autocomplete_fragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toEndOf="@id/customer_ic_search"
-            android:layout_centerVertical="true"
-            android:textSize="15sp"
-            android:textColor="#000"
-            android:id="@+id/input_search"
-            android:background="@null"
-            android:hint="@string/Adress_city"
-            android:autofillHints=""
-            android:inputType="textPostalAddress" />
+            android:layout_height="wrap_content"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            />
 
     </RelativeLayout>
 
@@ -97,6 +81,24 @@
             android:text="@string/customer_hours_map"
             android:textStyle="bold" />
 
+
+        <TextView
+            android:id="@+id/hoursView"
+            android:layout_width="100dp"
+            android:layout_height="38dp"
+            android:layout_alignTop="@+id/hours"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="56dp"
+            android:layout_marginTop="27dp"
+            android:layout_marginEnd="65dp"
+            android:layout_marginBottom="78dp"
+            android:layout_toStartOf="@+id/end_rent"
+            android:layout_toEndOf="@+id/start_rent"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
         <EditText
             android:id="@+id/startDate"
             android:layout_width="100dp"
@@ -108,7 +110,7 @@
             android:ems="10"
             android:hint="Start rent Date"
             android:inputType="date"
-            android:clickable="true"
+            android:onClick="DatePicker"
             android:textSize="14sp" />
 
         <EditText
@@ -122,7 +124,7 @@
             android:ems="10"
             android:inputType="date"
             android:hint="End rent Date"
-            android:clickable="true"
+            android:onClick="DatePicker"
             android:textSize="14sp" />
 
         <EditText
@@ -136,7 +138,6 @@
             android:ems="10"
             android:inputType="time"
             android:hint="Start rent time"
-            android:clickable="true"
             android:onClick="TimePicker"
             android:textSize="14sp" />
 
@@ -151,6 +152,7 @@
             android:ems="10"
             android:inputType="time"
             android:hint="End rent time"
+            android:onClick="TimePicker"
             android:textSize="14sp"
             />
 
