@@ -129,10 +129,6 @@ public class VacationRent extends Fragment {
         dateBend = (ImageButton) myVeiw.findViewById(R.id.dateBend);
         timeBend = (ImageButton) myVeiw.findViewById(R.id.timeBend);
         ok=(Button)myVeiw.findViewById(R.id.ok);
-        timeStartText.setText("Time:");
-        dateStartText.setText("Date:");
-        timeEndText.setText("Time:");
-        dateEndText.setText("Date:");
         final Calendar cal = Calendar.getInstance();
         String final_dates = "you offer your spot for the following dates:";
         final Bundle bundle = new Bundle();
@@ -163,7 +159,7 @@ public class VacationRent extends Fragment {
 
                 }
                 park.put("userID",userID);
-                park.put("price",pricePerHour);
+                park.put("Price",pricePerHour);
                 fStore.collection("availables parking").add(park);
 //                FragmentManager f = getActivity().getSupportFragmentManager();
 //                f.beginTransaction().replace(R.id.fragment_container, P).commit();
