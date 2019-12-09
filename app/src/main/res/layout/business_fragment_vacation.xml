@@ -17,7 +17,7 @@
         android:layout_marginRight="304dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name" />
+        android:hint="Date" />
 
     <EditText
         android:id="@+id/timeTStart"
@@ -29,7 +29,7 @@
         android:layout_marginBottom="450dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name" />
+        android:hint="Time" />
 
 
 
@@ -116,7 +116,7 @@
         android:layout_marginRight="304dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name" />
+        android:hint="Date" />
 
     <EditText
         android:id="@+id/timeTend"
@@ -128,7 +128,7 @@
         android:layout_marginBottom="300dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name" />
+        android:hint="Time" />
     <EditText
         android:id="@+id/street"
         android:layout_width="wrap_content"
