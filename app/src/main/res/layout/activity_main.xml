@@ -10,7 +10,7 @@
     android:orientation="vertical"
     android:padding="15dp"
     android:background="@drawable/city_bacground"
-    tools:context=".Login"
+    tools:context=".MainActivity"
 
     >
 
