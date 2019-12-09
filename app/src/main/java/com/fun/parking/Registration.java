@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class Registration extends AppCompatActivity {
     public static final String TAG = "TAG";
-    EditText mFullName,mEmail,mPassword,mPhone;
+    EditText mFullName,mEmail,mPassword,mPhone,mCountry,mStreet,mCity,mHouseNumber;
     Button mRegisterBtn;
     TextView mLoginBtn;
     FirebaseAuth fAuth;
@@ -47,6 +47,11 @@ public class Registration extends AppCompatActivity {
         mPassword   = findViewById(R.id.password);
         mPhone      = findViewById(R.id.phone);
         mRegisterBtn= findViewById(R.id.btnregister);
+        mCountry= findViewById(R.id.country);
+        mStreet= findViewById(R.id.street);
+        mCity= findViewById(R.id.city);
+        mHouseNumber= findViewById(R.id.houseNumber);
+
         //mLoginBtn   = findViewById(R.id.createText);
 
         fAuth = FirebaseAuth.getInstance();
@@ -67,7 +72,12 @@ public class Registration extends AppCompatActivity {
                 String password = mPassword.getText().toString().trim();
                 final String name = mFullName.getText().toString();
                 final String phone    = mPhone.getText().toString();
+                final String country = mCountry.getText().toString();
+                final String street    = mStreet.getText().toString();
+                final String city = mCity.getText().toString();
+                final String houseNumber    = mHouseNumber.getText().toString();
 
+             //   final String
                 if(TextUtils.isEmpty(email)){
                     mEmail.setError("Email is Required.");
                     return;
@@ -95,9 +105,16 @@ public class Registration extends AppCompatActivity {
                             userID = fAuth.getCurrentUser().getUid();
                             DocumentReference documentReference = fStore.collection("users").document(userID);
                             Map<String,Object> user = new HashMap<>();
+                            Map<String,Object> address = new HashMap<>();
                             user.put("fName",name);
                             user.put("email",email);
                             user.put("phone",phone);
+                            address.put("country",country);
+                            address.put("street",street);
+                            address.put("city",city);
+                            address.put("houseNumber",houseNumber);
+                            user.put("address",address);
+
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
