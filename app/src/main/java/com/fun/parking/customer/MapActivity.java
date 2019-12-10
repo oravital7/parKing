@@ -1,5 +1,6 @@
 package com.fun.parking.customer;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
@@ -36,22 +37,34 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.maps.android.ui.IconGenerator;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private FirebaseFirestore mFstore;
+    private FirebaseAuth mFAuth;
     private FusedLocationProviderClient mfusedLocationClient;
     private Calendar mStartDate, mEndDate;
-
+    private int mPerHour;
+    private String muserId,mAddress,mStringStartDate,mStringEndDate;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -62,7 +75,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setTimestampsInSnapshotsEnabled(true)
                 .build();
-        mFstore.setFirestoreSettings(settings);
+       // mFstore.setFirestoreSettings(settings);
+
 
         resetTimes();
 
@@ -72,7 +86,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         initAutoCompletePlaces();
-    }
+
+
+
+   }
 
     private void initAutoCompletePlaces()
     {
@@ -128,9 +145,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (mStartDate.get(Calendar.YEAR) == mEndDate.get(Calendar.YEAR) &&
                 mStartDate.get(Calendar.MONTH) == mEndDate.get(Calendar.MONTH))
         {
-            hours.setText("" + ((mEndDate.get(Calendar.DAY_OF_MONTH) -
-                    mStartDate.get(Calendar.DAY_OF_MONTH)) * 24 +
-                    mEndDate.get(Calendar.HOUR_OF_DAY) - mStartDate.get(Calendar.HOUR_OF_DAY)));
+            hours.setText("" + getHours()+":"+getMin());
         }
         else
             hours.setText("");
@@ -141,7 +156,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         startDate.setText(mStartDate.get(Calendar.DAY_OF_MONTH) + " / " +
                 (mStartDate.get(Calendar.MONTH) + 1) + " / " + mStartDate.get(Calendar.YEAR));
         startTime.setText(mStartDate.get(Calendar.HOUR_OF_DAY) + " : " + minutes);
-
+        mStringStartDate=mStartDate.get(Calendar.DAY_OF_MONTH) + " / " +
+                (mStartDate.get(Calendar.MONTH) + 1) + " / " + mStartDate.get(Calendar.YEAR)+" "+mStartDate.get(Calendar.HOUR_OF_DAY) + " : " + minutes;
         minutes = mEndDate.get(Calendar.MINUTE) < 10 ? "0" +
                 mEndDate.get(Calendar.MINUTE) : "" + mEndDate.get(Calendar.MINUTE);
 
@@ -149,8 +165,31 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 (mEndDate.get(Calendar.MONTH) + 1) + " / " + mEndDate.get(Calendar.YEAR));
         endTime.setText(mEndDate.get(Calendar.HOUR_OF_DAY) + " : " + minutes);
 
+        mStringEndDate=mEndDate.get(Calendar.DAY_OF_MONTH) + " / " +
+                (mEndDate.get(Calendar.MONTH) + 1) + " / " + mEndDate.get(Calendar.YEAR)+" "+mEndDate.get(Calendar.HOUR_OF_DAY) + " : " + minutes;
         addAvailableParkingMarkers();
+
     }
+public int getHours(){
+        return ((mEndDate.get(Calendar.DAY_OF_MONTH) -
+                mStartDate.get(Calendar.DAY_OF_MONTH)) * 24 +
+                mEndDate.get(Calendar.HOUR_OF_DAY) - mStartDate.get(Calendar.HOUR_OF_DAY));
+}
+public double getMin(){
+    double different  = (mEndDate.getTimeInMillis() - mStartDate.getTimeInMillis());
+    double secondsInMilli = 1000;
+    double minutesInMilli = secondsInMilli * 60;
+    double hoursInMilli = minutesInMilli * 60;
+    double daysInMilli = hoursInMilli * 24;
+
+    double elapsedDays = different  / daysInMilli;
+    different  = different  % daysInMilli;
+
+    double elapsedHours = different  / hoursInMilli;
+    different  = different  % hoursInMilli;
+    double min = different  / minutesInMilli;
+   return min;
+}
 
     @Override
     public void onMapReady(GoogleMap googleMap)
@@ -175,12 +214,39 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 //                return false;
 //            }
 //        });
+//book now
 
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Toast.makeText(MapActivity.this, "Parking id: " + marker.getTitle(),
                         Toast.LENGTH_LONG).show();
+                mFstore = FirebaseFirestore.getInstance();
+                mFAuth=FirebaseAuth.getInstance();
+                muserId = mFAuth.getCurrentUser().getUid();
+
+               //update the firebase
+                HashMap<String, Object> orders = new HashMap<String, Object>();
+                HashMap<String, Object> rent = new HashMap<String, Object>();
+                HashMap<String, Object> price = new HashMap<String, Object>();
+                price.put("Price per hour",mPerHour);
+                price.put("Total Price",(getHours()*mPerHour)+((getMin()/60)*mPerHour));
+                rent.put("End",new Timestamp(mEndDate.getTimeInMillis()));
+                rent.put("Start",new Timestamp(mStartDate.getTimeInMillis()));
+                orders.put("Rent",rent);
+                orders.put("Price",price);
+                orders.put("Parking id: ",marker.getTitle());
+                orders.put("UserId",muserId);
+                mFstore.collection("orders").add(orders);
+               Intent intent = new Intent(getApplicationContext(), Orders.class);
+                intent.putExtra("startDate", mStringStartDate);
+                intent.putExtra("endDate", mStringEndDate);
+                intent.putExtra("address",mAddress);
+                intent.putExtra("total price",String.valueOf((getHours()*mPerHour)+((getMin()/60)*mPerHour)));
+                startActivity(intent);
+
+
+
             }
         });
 
@@ -230,7 +296,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                     info.setAddress(document.get("Address.City") + ", " +
                                             document.get("Address.Street"))
                                             .setPrice("₪" + document.get("Price") + " per hour");
-
+                                             mPerHour=Integer.parseInt(document.get("Price").toString());
+                                             mAddress=document.get("Address.City") + ", " +
+                                                     document.get("Address.Street");
                                     m.setTag(info);
                                     m.showInfoWindow();
                                 }
@@ -240,7 +308,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         }
                     }
                 });
+
     }
+
 
     public void ShowHideBtn(View v)
     {

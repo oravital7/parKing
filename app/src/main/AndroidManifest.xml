@@ -32,6 +32,9 @@
             android:name=".Registration"
             android:exported="true" />
         <activity
+            android:name=".customer.Orders"
+            android:exported="true" />
+        <activity
             android:name=".Login"
             android:exported="true" />
 
