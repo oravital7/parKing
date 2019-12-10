@@ -9,10 +9,10 @@ import com.fun.parking.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
-public class map_window_info_customize implements GoogleMap.InfoWindowAdapter {
+public class MapWindowInfoCustomize implements GoogleMap.InfoWindowAdapter {
     private Context context;
 
-    public map_window_info_customize(Context ctx)
+    public MapWindowInfoCustomize(Context ctx)
     {
         context = ctx;
     }
