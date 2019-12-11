@@ -209,12 +209,13 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="35dp"
         android:background="@color/places_autocomplete_progress_tint"
-        android:text="back"
+        android:text="logout"
         android:textColor="#fff" />
 
 </LinearLayout>
