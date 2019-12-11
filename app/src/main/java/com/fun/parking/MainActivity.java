@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.fun.parking.business.BusinessMainActivity;
+import com.fun.parking.business.DailyRent;
 
 import javax.annotation.Nullable;
 
@@ -20,28 +21,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mRent= findViewById(R.id.rent);
         mFind = findViewById(R.id.findParking);
-
-
-//        mFind.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                Intent intent = new Intent(this, BusinessMainActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        
 
         mFind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), BusinessMainActivity.class));
+                startActivity(new Intent(getApplicationContext(), com.fun.parking.customer.MapActivity.class));
             }
         });
 
         mRent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), com.fun.parking.customer.MainActivity.class));
+                //startActivity(new Intent(getApplicationContext(), com.fun.parking.customer.MainActivity.class));
+                startActivity(new Intent(getApplicationContext(), com.fun.parking.business.DailyRent.class));
             }
         });
 

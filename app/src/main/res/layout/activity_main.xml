@@ -19,12 +19,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:cursorVisible="false"
-        android:text="find me parking" />
+        android:text="find me parking"
+        android:background="@android:color/transparent"
+        />
 
     <Button
         android:id="@+id/rent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="i want to rent a parking" />
+        android:text="i want to rent a parking"
+        android:background="@android:color/transparent"
+        />
 </LinearLayout>
 <!--</androidx.constraintlayout.widget.ConstraintLayout>-->
