@@ -42,15 +42,15 @@ public class Registration extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
-        mFullName   = findViewById(R.id.name);
+        mFullName = findViewById(R.id.name);
         mEmail      = findViewById(R.id.Email);
         mPassword   = findViewById(R.id.password);
         mPhone      = findViewById(R.id.phone);
-        mRegisterBtn= findViewById(R.id.btnregister);
-        mCountry= findViewById(R.id.country);
-        mStreet= findViewById(R.id.street);
-        mCity= findViewById(R.id.city);
-        mHouseNumber= findViewById(R.id.houseNumber);
+        mRegisterBtn = findViewById(R.id.btnregister);
+        mCountry = findViewById(R.id.country);
+        mStreet = findViewById(R.id.street);
+        mCity = findViewById(R.id.city);
+        mHouseNumber = findViewById(R.id.houseNumber);
         mLoginLink = findViewById(R.id.loginLink);
         //mLoginBtn   = findViewById(R.id.createText);
 
