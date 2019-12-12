@@ -14,12 +14,10 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.fun.parking.R;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class DailyRent extends Fragment {
 ImageButton returnB,date;
@@ -41,7 +39,7 @@ private int mYear, mMonth, mday, mhour, mMin;
         dateText=myVeiw.findViewById(R.id.dateT);
         final Calendar today = Calendar.getInstance();
         dateText.setText(today.get(Calendar.DAY_OF_MONTH)+"/"+(today.get(Calendar.MONTH)+1)+"/"+today.get(Calendar.YEAR));
-        date=myVeiw.findViewById(R.id.date);
+        date=myVeiw.findViewById(R.id.startTime);
         date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Linear Layout with vertical orientation and other properties -->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    android:padding="15dp"
+    tools:context=".Login">
 
     <TextView
-        android:id="@+id/order"
-        android:layout_width="348dp"
-        android:layout_height="409dp"
+        android:id="@+id/city"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:background="@drawable/order_city"
+        android:fontFamily="serif"
+        android:text="City"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#00CF2929"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/street"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/startTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/endTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="TextView" />
 </LinearLayout>

@@ -63,7 +63,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private FusedLocationProviderClient mfusedLocationClient;
     private Calendar mStartDate, mEndDate;
     private int mPerHour;
-    private String muserId,mAddress,mStringStartDate,mStringEndDate;
+    private String muserId,mAddress,mStringStartDate,mStringEndDate,mCity,mStreet,mParkingID;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -239,12 +239,21 @@ public double getMin(){
                 orders.put("Price",price);
                 orders.put("Parking id: ",marker.getTitle());
                 orders.put("UserId",muserId);
-                mFstore.collection("orders").add(orders);
-               Intent intent = new Intent(getApplicationContext(), Orders.class);
+                mFstore.collection("orders").add(orders).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentReference> task) {
+
+                        Log.d("dana",task.getResult().getId());
+                    }
+                });
+                Intent intent = new Intent(getApplicationContext(), Orders.class);
                 intent.putExtra("startDate", mStringStartDate);
                 intent.putExtra("endDate", mStringEndDate);
-                intent.putExtra("address",mAddress);
+                //intent.putExtra("address",mAddress);
+                intent.putExtra("city",mCity);
+                intent.putExtra("street",mStreet);
                 intent.putExtra("total price",String.valueOf((getHours()*mPerHour)+((getMin()/60)*mPerHour)));
+                intent.putExtra("ParkingID: ",marker.getTitle());
                 startActivity(intent);
 
 
@@ -299,8 +308,11 @@ public double getMin(){
                                             document.get("Address.Street"))
                                             .setPrice("₪" + document.get("Price") + " per hour");
                                              mPerHour=Integer.parseInt(document.get("Price").toString());
-                                             mAddress=document.get("Address.City") + ", " +
-                                                     document.get("Address.Street");
+                                                mCity=document.get("Address.City")+"";
+                                                mStreet=document.get("Address.Street")+"";
+//                                             mAddress=document.get("Address.City") + ", " +
+//                                                     document.get("Address.Street");
+
                                     m.setTag(info);
                                     m.showInfoWindow();
                                 }

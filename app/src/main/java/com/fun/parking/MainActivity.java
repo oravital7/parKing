@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //startActivity(new Intent(getApplicationContext(), com.fun.parking.customer.MainActivity.class));
-                startActivity(new Intent(getApplicationContext(), com.fun.parking.business.DailyRent.class));
+                startActivity(new Intent(getApplicationContext(), com.fun.parking.business.BusinessMainActivity.class));
             }
         });
 
