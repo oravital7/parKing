@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mRent= findViewById(R.id.rent);
+        mRent = findViewById(R.id.rent);
         mFind = findViewById(R.id.findParking);
         
 
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //startActivity(new Intent(getApplicationContext(), com.fun.parking.customer.MainActivity.class));
-                startActivity(new Intent(getApplicationContext(), com.fun.parking.business.DailyRent.class));
+                startActivity(new Intent(getApplicationContext(), com.fun.parking.business.BusinessMainActivity.class));
             }
         });
 

@@ -83,17 +83,16 @@
 
         <TextView
             android:id="@+id/hoursView"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="38dp"
             android:layout_alignTop="@+id/hours"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="56dp"
-            android:layout_marginTop="27dp"
-            android:layout_marginEnd="65dp"
-            android:layout_marginBottom="78dp"
+            android:layout_marginStart="51dp"
+            android:layout_marginTop="26dp"
+            android:layout_marginEnd="59dp"
+            android:layout_marginBottom="74dp"
             android:layout_toStartOf="@+id/end_rent"
             android:layout_toEndOf="@+id/start_rent"
-            android:inputType="number"
             android:textAlignment="center"
             android:textSize="24sp"
             android:textStyle="bold" />

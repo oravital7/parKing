@@ -59,7 +59,7 @@ public class BusinessMainActivity extends AppCompatActivity implements Navigatio
                 f.beginTransaction().replace(R.id.fragment_container, m).commit();
             }
         });
-        welcome_user=findViewById(R.id.welcome);
+        welcome_user = findViewById(R.id.welcome);
         welcome_user.setText("ffhhfhfh");
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();

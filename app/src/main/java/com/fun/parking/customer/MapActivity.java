@@ -37,22 +37,14 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.maps.android.ui.IconGenerator;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -62,7 +54,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private FirebaseAuth mFAuth;
     private FusedLocationProviderClient mfusedLocationClient;
     private Calendar mStartDate, mEndDate;
-    private int mPerHour;
     private String muserId,mAddress,mStringStartDate,mStringEndDate;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -71,14 +62,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.customer_activity_maps);
         mfusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mFstore = FirebaseFirestore.getInstance();
-
-
-
-//        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-//                .setTimestampsInSnapshotsEnabled(true)
-//                .build();
-//        mFstore.setFirestoreSettings(settings);
-
 
         resetTimes();
 
@@ -147,7 +130,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (mStartDate.get(Calendar.YEAR) == mEndDate.get(Calendar.YEAR) &&
                 mStartDate.get(Calendar.MONTH) == mEndDate.get(Calendar.MONTH))
         {
-            hours.setText("" + getHours()+":"+getMin());
+            long hoursDiff[] = getHours();
+            hours.setText("" + hoursDiff[0] + ":" + hoursDiff[1]);
         }
         else
             hours.setText("");
@@ -172,25 +156,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         addAvailableParkingMarkers();
 
     }
-public int getHours(){
-        return ((mEndDate.get(Calendar.DAY_OF_MONTH) -
-                mStartDate.get(Calendar.DAY_OF_MONTH)) * 24 +
-                mEndDate.get(Calendar.HOUR_OF_DAY) - mStartDate.get(Calendar.HOUR_OF_DAY));
-}
-public double getMin(){
-    double different  = (mEndDate.getTimeInMillis() - mStartDate.getTimeInMillis());
-    double secondsInMilli = 1000;
-    double minutesInMilli = secondsInMilli * 60;
-    double hoursInMilli = minutesInMilli * 60;
-    double daysInMilli = hoursInMilli * 24;
+public long[] getHours()
+{
+    long diff = mEndDate.getTimeInMillis() - mStartDate.getTimeInMillis();
+    long minutes = (diff / 1000) / 60;
+    long hours = minutes / 60;
+    minutes %= 60;
 
-    double elapsedDays = different  / daysInMilli;
-    different  = different  % daysInMilli;
+    long result[] = {hours, minutes};
 
-    double elapsedHours = different  / hoursInMilli;
-    different  = different  % hoursInMilli;
-    double min = different  / minutesInMilli;
-   return min;
+    return result;
 }
 
     @Override
@@ -198,6 +173,7 @@ public double getMin(){
     {
         Log.d("onMapReady", "pressed");
         mMap = googleMap;
+
         try {
             mMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
@@ -207,48 +183,39 @@ public double getMin(){
             Log.e("customer_map", "Can't find style. Error: ", e);
         }
 
-//        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
-//        {
-//            @Override
-//            public boolean onMarkerClick(Marker marker) {
-//                Toast.makeText(MapActivity.this, "Click on: " +
-//                        marker.getTitle(), Toast.LENGTH_SHORT).show();
-//                return false;
-//            }
-//        });
-//book now
-
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Toast.makeText(MapActivity.this, "Parking id: " + marker.getTitle(),
                         Toast.LENGTH_LONG).show();
                 mFstore = FirebaseFirestore.getInstance();
-                mFAuth=FirebaseAuth.getInstance();
+                mFAuth = FirebaseAuth.getInstance();
                 muserId = mFAuth.getCurrentUser().getUid();
 
                //update the firebase
                 HashMap<String, Object> orders = new HashMap<String, Object>();
                 HashMap<String, Object> rent = new HashMap<String, Object>();
                 HashMap<String, Object> price = new HashMap<String, Object>();
-                price.put("Price per hour",mPerHour);
-                price.put("Total Price",(getHours()*mPerHour)+((getMin()/60)*mPerHour));
+
+                long hoursDiff[] = getHours();
+                double pricePerHour = Double.parseDouble(marker.getSnippet());
+                double totalPrice = pricePerHour * (hoursDiff[0] + hoursDiff[1] / 60.0);
+
+                price.put("Price per hour", pricePerHour);
+                price.put("Total Price",totalPrice);
                 rent.put("End",new Timestamp(mEndDate.getTimeInMillis()));
                 rent.put("Start",new Timestamp(mStartDate.getTimeInMillis()));
                 orders.put("Rent",rent);
                 orders.put("Price",price);
-                orders.put("Parking id: ",marker.getTitle());
+                orders.put("Parking id: ", marker.getTitle());
                 orders.put("UserId",muserId);
                 mFstore.collection("orders").add(orders);
-               Intent intent = new Intent(getApplicationContext(), Orders.class);
+                Intent intent = new Intent(getApplicationContext(), Orders.class);
                 intent.putExtra("startDate", mStringStartDate);
                 intent.putExtra("endDate", mStringEndDate);
-                intent.putExtra("address",mAddress);
-                intent.putExtra("total price",String.valueOf((getHours()*mPerHour)+((getMin()/60)*mPerHour)));
+                intent.putExtra("address", mAddress);
+                intent.putExtra("total price","" + totalPrice);
                 startActivity(intent);
-
-
-
             }
         });
 
@@ -258,16 +225,13 @@ public double getMin(){
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
-                        Toast.makeText(MapActivity.this, ""+ location.getLatitude()
+                        Toast.makeText(MapActivity.this, "" + location.getLatitude()
                                 + " " + location.getLongitude(), Toast.LENGTH_SHORT);
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(
                                 new LatLng(location.getLatitude(), location.getLongitude())));
                     }
                 });
-
-
         LatLng test = new LatLng(32.1005821, 34.8817902);
-
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(test, 16.0f));
     }
 
@@ -277,10 +241,8 @@ public double getMin(){
 
         final IconMakerFactory iconMaker = new IconMakerFactory(new IconGenerator(this));
 
-
         MapWindowInfoCustomize customInfoWindow = new MapWindowInfoCustomize(this);
         mMap.setInfoWindowAdapter(customInfoWindow);
-
 
         mFstore.collection("availables parking")
                 .whereGreaterThanOrEqualTo("Rent.Start", mStartDate.getTime())
@@ -288,31 +250,32 @@ public double getMin(){
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful())
+                        {
                             for (QueryDocumentSnapshot document : task.getResult())
                             {
-                                if (document.getDate("Rent.End").compareTo(mEndDate.getTime()) > 0)
+                                if (document.getDate("Rent.End").compareTo(mEndDate.getTime()) > 0
+                                    && document.getBoolean("available"))
                                 {
                                     Marker m = mMap.addMarker(iconMaker.CreateIcon(document));
                                     InfoWindowData info = new InfoWindowData();
                                     info.setAddress(document.get("Address.City") + ", " +
                                             document.get("Address.Street"))
                                             .setPrice("₪" + document.get("Price") + " per hour");
-                                             mPerHour=Integer.parseInt(document.get("Price").toString());
-                                             mAddress=document.get("Address.City") + ", " +
+                                             mAddress = document.get("Address.City") + ", " +
                                                      document.get("Address.Street");
                                     m.setTag(info);
+                                    m.setSnippet("" + document.get("Price"));
                                     m.showInfoWindow();
                                 }
                             }
                         } else {
-                            Log.d("Or Map: ", "Error getting documents: ", task.getException());
+                            Log.d("Map: ", "Error getting documents: ", task.getException());
                         }
                     }
                 });
 
     }
-
 
     public void ShowHideBtn(View v)
     {
