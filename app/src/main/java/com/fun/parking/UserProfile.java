@@ -49,21 +49,23 @@ public class UserProfile extends AppCompatActivity {
 
             }
         });
-
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();//logout
                 startActivity(new Intent(getApplicationContext(), Login.class));
+                FirebaseAuth.getInstance().signOut();//logou
                 finish();
+                //logout(v);
             }
         });
+
+
     }
 
 
-//    public void logout(View view) {
+    public void logout(View view) {
 //        FirebaseAuth.getInstance().signOut();//logout
 //        startActivity(new Intent(getApplicationContext(), Login.class));
 //        finish();
-//    }
+    }
 }
