@@ -12,9 +12,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Entrance">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".UserProfile"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".customer.Profile"
             android:exported="true"
@@ -30,6 +37,12 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Registration"
+            android:exported="true" />
+        <activity
+            android:name=".business.BaseActivity"
+            android:exported="true" />
+        <activity
+            android:name=".business.BusinessMain"
             android:exported="true" />
         <activity
             android:name=".customer.Orders"

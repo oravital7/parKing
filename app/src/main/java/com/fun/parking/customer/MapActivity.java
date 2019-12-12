@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import com.fun.parking.R;
+import com.fun.parking.business.BaseActivity;
 import com.fun.parking.customer.pickers.DatePickerFragment;
 import com.fun.parking.customer.pickers.TimePickerFragment;
 import com.google.android.gms.common.api.Status;
@@ -55,7 +56,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapActivity extends BaseActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private FirebaseFirestore mFstore;

@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +20,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.fun.parking.R;
 import com.google.android.gms.maps.model.LatLng;
@@ -41,7 +38,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-public class VacationRent extends Fragment {
+public class BusinessMain extends BaseActivity {
     EditText dateStartText, timeStartText, dateEndText, timeEndText, street,city,country,price;
     ImageButton dateStart, timeStart, dateBend, timeBend, returnB;
     Button ok;
@@ -52,15 +49,16 @@ public class VacationRent extends Fragment {
     private int pricePerHour;
 
     @Nullable
-    @Override
 
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View myVeiw = inflater.inflate(R.layout.business_fragment_vacation, container, false);
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.business_fragment_vacation);
         final FirebaseAuth fAuth = FirebaseAuth.getInstance();
         final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
         userID = fAuth.getCurrentUser().getUid();
         DocumentReference documentReference = fStore.collection("users").document(userID);
-        documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
+        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
                 street.setText(documentSnapshot.getString("address.street")+" "+documentSnapshot.getString("address.houseNumber"));
@@ -69,7 +67,7 @@ public class VacationRent extends Fragment {
                 address=documentSnapshot.getString("address.street")+" "+documentSnapshot.getString("address.houseNumber")+" "+documentSnapshot.getString("address.city")+" "+documentSnapshot.getString("address.country");
             }
         });
-        street = (EditText) myVeiw.findViewById(R.id.street);
+        street = (EditText) findViewById(R.id.street);
         street.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
             @Override
@@ -82,7 +80,7 @@ public class VacationRent extends Fragment {
 
             }
         });
-        city = (EditText) myVeiw.findViewById(R.id.city);
+        city = (EditText) findViewById(R.id.city);
         city.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
             @Override
@@ -94,7 +92,7 @@ public class VacationRent extends Fragment {
 
             }
         });
-        country = (EditText) myVeiw.findViewById(R.id.country);
+        country = (EditText) findViewById(R.id.country);
         country.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
             @Override
@@ -107,12 +105,12 @@ public class VacationRent extends Fragment {
             }
         });
 
-        dateStart = (ImageButton) myVeiw.findViewById(R.id.dateBStart);
-        timeStart = (ImageButton) myVeiw.findViewById(R.id.timeBStart);
-        dateStartText = (EditText) myVeiw.findViewById(R.id.DtextStart);
-        timeStartText = (EditText) myVeiw.findViewById(R.id.timeTStart);
-        dateEndText = (EditText) myVeiw.findViewById(R.id.Dtextend);
-        price=(EditText)myVeiw.findViewById(R.id.price);
+        dateStart = (ImageButton) findViewById(R.id.dateBStart);
+        timeStart = (ImageButton) findViewById(R.id.timeBStart);
+        dateStartText = (EditText) findViewById(R.id.DtextStart);
+        timeStartText = (EditText) findViewById(R.id.timeTStart);
+        dateEndText = (EditText) findViewById(R.id.Dtextend);
+        price=(EditText)findViewById(R.id.price);
         price.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
             @Override
@@ -125,10 +123,10 @@ public class VacationRent extends Fragment {
 
             }
         });
-        timeEndText = (EditText) myVeiw.findViewById(R.id.timeTend);
-        dateBend = (ImageButton) myVeiw.findViewById(R.id.dateBend);
-        timeBend = (ImageButton) myVeiw.findViewById(R.id.timeBend);
-        ok=(Button)myVeiw.findViewById(R.id.ok);
+        timeEndText = (EditText) findViewById(R.id.timeTend);
+        dateBend = (ImageButton) findViewById(R.id.dateBend);
+        timeBend = (ImageButton) findViewById(R.id.timeBend);
+        ok=(Button)findViewById(R.id.ok);
         final Calendar cal = Calendar.getInstance();
         String final_dates = "you offer your spot for the following dates:";
         final Bundle bundle = new Bundle();
@@ -148,11 +146,13 @@ public class VacationRent extends Fragment {
                 Rent.put("Start", timestampStart);
                 Rent.put("End", timestampEnd);
                 park.put("Rent", Rent);
+                boolean available=true;
+                park.put("available",available);
                 park.put("Address",addressMap);
 
                 HashMap<String, Object> location = new HashMap<String, Object>();
                 try {
-                    GeoPoint point=new GeoPoint(getLocationFromAddress(getActivity(),address).latitude,getLocationFromAddress(getActivity(),address).longitude);
+                    GeoPoint point=new GeoPoint(getLocationFromAddress(BusinessMain.this,address).latitude,getLocationFromAddress(BusinessMain.this,address).longitude);
 
                     park.put("Location",point);
                 } catch (Exception e) {
@@ -174,7 +174,7 @@ public class VacationRent extends Fragment {
                 mMonth = cal.get(Calendar.MONTH);
                 mday = cal.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog d1 = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog d1 = new DatePickerDialog(BusinessMain.this, new DatePickerDialog.OnDateSetListener() {
 
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
@@ -196,7 +196,7 @@ public class VacationRent extends Fragment {
                 mMonth = cal2.get(Calendar.MONTH);
                 mday = cal2.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog d1 = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog d1 = new DatePickerDialog(BusinessMain.this, new DatePickerDialog.OnDateSetListener() {
 
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
@@ -222,7 +222,7 @@ public class VacationRent extends Fragment {
                 final Calendar c2 = Calendar.getInstance();
                 mhour = c2.get(Calendar.HOUR_OF_DAY);
                 mMin = c2.get(Calendar.MINUTE);
-                TimePickerDialog t1 = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog t1 = new TimePickerDialog(BusinessMain.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
                         timeEndText.setText(i + ":" + i1);
@@ -242,7 +242,7 @@ public class VacationRent extends Fragment {
                 final Calendar c2 = Calendar.getInstance();
                 mhour = c2.get(Calendar.HOUR_OF_DAY);
                 mMin = c2.get(Calendar.MINUTE);
-                TimePickerDialog t1 = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog t1 = new TimePickerDialog(BusinessMain.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
                         timeStartText.setText(i + ":" + i1);
@@ -290,20 +290,10 @@ public class VacationRent extends Fragment {
 //        }, 30000);
 
 
-        returnB = myVeiw.findViewById(R.id.returnB);
-        returnB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Activity context = getActivity();
-                Intent intent = new Intent(context, BusinessMainActivity.class);
-                startActivity(intent);
-            }
-        });
-        final PriceSetting P = new PriceSetting();
 
-        P.setArguments(bundle);
 
-        return myVeiw;
+
+
     }
 
     //converting address to latlng

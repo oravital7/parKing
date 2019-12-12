@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,57 +15,64 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.fun.parking.customfonts.MyEditText;
+import com.fun.parking.customfonts.MyTextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class Login extends AppCompatActivity {
-    EditText mEmail,mPassword;
-    Button mLoginBtn;
-    TextView mCreateBtn;
-    ProgressBar progressBar;
+//    ProgressBar progressBar;
     FirebaseAuth fAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_logint);
 
-        mEmail = findViewById(R.id.Email);
-        mPassword = findViewById(R.id.password);
-        progressBar = findViewById(R.id.progressBar);
+       final MyEditText email = findViewById(R.id.Email);
+       final MyEditText password = findViewById(R.id.password);
+//        progressBar = findViewById(R.id.progressBar);
         fAuth = FirebaseAuth.getInstance();
-        mLoginBtn = findViewById(R.id.loginBtn);
-        mCreateBtn = findViewById(R.id.createText);
 
-        mLoginBtn.setOnClickListener(new View.OnClickListener() {
+        MyTextView loginBtn = findViewById(R.id.loginBtn);
+
+        ImageView sinb = findViewById(R.id.sinb);
+        sinb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
+        loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String email = mEmail.getText().toString().trim();
-                String password = mPassword.getText().toString().trim();
+                String emailStr = email.getText().toString().trim();
+                String passwordStr = password.getText().toString().trim();
 
-                if(TextUtils.isEmpty(email)){
-                    mEmail.setError("Email is Required.");
+                if(TextUtils.isEmpty(emailStr)){
+                    email.setError("Email is Required.");
                     return;
                 }
 
-                if(TextUtils.isEmpty(password)){
-                    mPassword.setError("Password is Required.");
+                if(TextUtils.isEmpty(passwordStr)){
+                    password.setError("Password is Required.");
                     return;
                 }
 
                 if(password.length() < 6){
-                    mPassword.setError("Password Must be >= 6 Characters");
+                    password.setError("Password Must be >= 6 Characters");
                     return;
                 }
 
-                progressBar.setVisibility(View.VISIBLE);
+//                progressBar.setVisibility(View.VISIBLE);
 
                 // authenticate the user
 
-                fAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                fAuth.signInWithEmailAndPassword(emailStr,passwordStr).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
@@ -74,7 +82,7 @@ public class Login extends AppCompatActivity {
                         else
                         {
                             Toast.makeText(Login.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.GONE);
+//                            progressBar.setVisibility(View.GONE);
                         }
 
                     }
@@ -83,20 +91,9 @@ public class Login extends AppCompatActivity {
             }
         });
 
-
-
-        mCreateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),Registration.class));
-            }
-        });
-
         if(fAuth.getCurrentUser() != null){
            startActivity(new Intent(getApplicationContext(),MainActivity.class));
            finish();
         }
-
-
     }
-} 
+}

@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.fun.parking.business.BaseActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -26,7 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Registration extends AppCompatActivity {
+public class Registration extends BaseActivity {
     public static final String TAG = "TAG";
     EditText mFullName,mEmail,mPassword,mPhone,mCountry,mStreet,mCity,mHouseNumber;
     Button mRegisterBtn;
