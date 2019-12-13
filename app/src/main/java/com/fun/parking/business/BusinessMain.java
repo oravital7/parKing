@@ -1,27 +1,21 @@
 package com.fun.parking.business;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.fun.parking.R;
+import com.fun.parking.customfonts.MyEditText;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -39,21 +33,26 @@ import java.util.HashMap;
 import java.util.List;
 
 public class BusinessMain extends BaseActivity {
-    EditText dateStartText, timeStartText, dateEndText, timeEndText, street,city,country,price;
-    ImageButton dateStart, timeStart, dateBend, timeBend, returnB;
-    Button ok;
-    final Calendar finalCalenderStart = Calendar.getInstance();
-    final Calendar finalCalenderEnd = Calendar.getInstance();
-    private int mYear, mMonth, mday, mhour, mMin;
-    private String address,userID;
-    private int pricePerHour;
-
-    @Nullable
-
-
+    private String userID;
+    private String cityS,countryS,streetS,houseNumberS,fullAddress;
+    private final Calendar finalCalenderStart = Calendar.getInstance();
+    private final Calendar finalCalenderEnd = Calendar.getInstance();
+    private int Year, Month, day, hour, Min;
+    private final Calendar cal = Calendar.getInstance();
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.business_fragment_vacation);
+        setContentView(R.layout.business_main);
+
+        final Button okB=findViewById(R.id.okButton);
+        final MyEditText startDate=findViewById(R.id.StartDateText);
+        final MyEditText startTime=findViewById(R.id.StarTimeText);
+        final MyEditText endDate=findViewById(R.id.EndDateText);
+        final MyEditText endTime=findViewById(R.id.endHourText);
+        final MyEditText country=findViewById(R.id.countryText);
+        final MyEditText city=findViewById(R.id.cityText);
+        final MyEditText street=findViewById(R.id.streetText);
+        final MyEditText houseNumber=findViewById(R.id.houseNumberText);
+        final MyEditText price=findViewById(R.id.priceText);
         final FirebaseAuth fAuth = FirebaseAuth.getInstance();
         final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
         userID = fAuth.getCurrentUser().getUid();
@@ -61,241 +60,139 @@ public class BusinessMain extends BaseActivity {
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                street.setText(documentSnapshot.getString("address.street")+" "+documentSnapshot.getString("address.houseNumber"));
-                city.setText(documentSnapshot.getString("address.city"));
-                country.setText(documentSnapshot.getString("address.country"));
-                address=documentSnapshot.getString("address.street")+" "+documentSnapshot.getString("address.houseNumber")+" "+documentSnapshot.getString("address.city")+" "+documentSnapshot.getString("address.country");
-            }
-        });
-        street = (EditText) findViewById(R.id.street);
-        street.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                cityS=documentSnapshot.getString("address.city");
+                countryS=documentSnapshot.getString("address.country");
+                streetS=documentSnapshot.getString("address.street");
+                houseNumberS=documentSnapshot.getString("address.houseNumber");
+                street.setText(streetS);
+                city.setText(cityS);
+                country.setText(countryS);
+                houseNumber.setText(houseNumberS);
 
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-
-                if (!hasFocus) {
-                    address="";
-                    address = street.getText().toString()+" ";
-                }
 
             }
         });
-        city = (EditText) findViewById(R.id.city);
-        city.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        okB.setOnClickListener(new View.OnClickListener(){
 
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-
-                if (!hasFocus) {
-                    address += city.getText().toString()+" ";
-                }
-
-            }
-        });
-        country = (EditText) findViewById(R.id.country);
-        country.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-
-                if (!hasFocus) {
-                    address += country.getText().toString()+" ";
-                }
-
-            }
-        });
-
-        dateStart = (ImageButton) findViewById(R.id.dateBStart);
-        timeStart = (ImageButton) findViewById(R.id.timeBStart);
-        dateStartText = (EditText) findViewById(R.id.DtextStart);
-        timeStartText = (EditText) findViewById(R.id.timeTStart);
-        dateEndText = (EditText) findViewById(R.id.Dtextend);
-        price=(EditText)findViewById(R.id.price);
-        price.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-
-                if (!hasFocus) {
-                    pricePerHour=Integer.parseInt( price.getText().toString());
-
-                }
-
-            }
-        });
-        timeEndText = (EditText) findViewById(R.id.timeTend);
-        dateBend = (ImageButton) findViewById(R.id.dateBend);
-        timeBend = (ImageButton) findViewById(R.id.timeBend);
-        ok=(Button)findViewById(R.id.ok);
-        final Calendar cal = Calendar.getInstance();
-        String final_dates = "you offer your spot for the following dates:";
-        final Bundle bundle = new Bundle();
-        bundle.putString("start", final_dates);
-        ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CollectionReference documentReference = fStore.collection("availables parking");
-                HashMap<String, Object> park = new HashMap<String, Object>();
-                Timestamp timestampStart = new Timestamp(finalCalenderStart.getTimeInMillis());
-                Timestamp timestampEnd = new Timestamp(finalCalenderEnd.getTimeInMillis());
-                HashMap<String, Object> addressMap=new HashMap<String, Object>();
-                addressMap.put("Street",street.getText().toString());
-                addressMap.put("City",city.getText().toString());
-                addressMap.put("Country",country.getText().toString());
-                HashMap<String, Object> Rent = new HashMap<String, Object>();
-                Rent.put("Start", timestampStart);
-                Rent.put("End", timestampEnd);
-                park.put("Rent", Rent);
-                boolean available=true;
-                park.put("available",available);
-                park.put("Address",addressMap);
-
-                HashMap<String, Object> location = new HashMap<String, Object>();
-                try {
-                    GeoPoint point=new GeoPoint(getLocationFromAddress(BusinessMain.this,address).latitude,getLocationFromAddress(BusinessMain.this,address).longitude);
-
-                    park.put("Location",point);
-                } catch (Exception e) {
-
+                if(TextUtils.isEmpty(country.getText().toString())||TextUtils.isEmpty(city.getText().toString())||TextUtils.isEmpty(street.getText().toString())||TextUtils.isEmpty(houseNumber.getText().toString())
+                        ||TextUtils.isEmpty(startDate.getText().toString())||TextUtils.isEmpty(startTime.getText().toString())||TextUtils.isEmpty(endTime.getText().toString())||TextUtils.isEmpty(endDate.getText().toString())||TextUtils.isEmpty(price.getText().toString())){
+                    Toast.makeText(BusinessMain.this,"Please fill all details",Toast.LENGTH_LONG).show();
                 }
-                park.put("userID",userID);
-                park.put("Price",pricePerHour);
-                fStore.collection("availables parking").add(park);
-//                FragmentManager f = getActivity().getSupportFragmentManager();
-//                f.beginTransaction().replace(R.id.fragment_container, P).commit();
-            }
-        });
-        dateStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                else{
+                    CollectionReference documentReference = fStore.collection("availables parking");
+                    boolean flag=true;
+                    HashMap<String, Object> park = new HashMap<String, Object>();
+                    Timestamp timestampStart = new Timestamp(finalCalenderStart.getTimeInMillis());
+                    Timestamp timestampEnd = new Timestamp(finalCalenderEnd.getTimeInMillis());
+                    HashMap<String, Object> addressMap=new HashMap<String, Object>();
+                    addressMap.put("Street",street.getText().toString());
+                    addressMap.put("City",city.getText().toString());
+                    addressMap.put("HouseNumber",houseNumber.getText().toString());
+                    addressMap.put("Country",country.getText().toString());
+                    HashMap<String, Object> Rent = new HashMap<String, Object>();
+                    Rent.put("Start", timestampStart);
+                    Rent.put("End", timestampEnd);
+                    park.put("Rent", Rent);
+                    boolean available=true;
+                    park.put("available",available);
+                    park.put("Address",addressMap);
+                    fullAddress=street.getText().toString()+" "+houseNumber.getText().toString()+" "+city.getText().toString()+" "+country.getText().toString();
+                    HashMap<String, Object> location = new HashMap<String, Object>();
+                    try {
+                        GeoPoint point=new GeoPoint(getLocationFromAddress(BusinessMain.this,fullAddress).latitude,getLocationFromAddress(BusinessMain.this,fullAddress).longitude);
 
-                mYear = cal.get(Calendar.YEAR);
+                        if(point==null)
+                            flag=false;
+                        park.put("Location",point);
+                    } catch (Exception e) {
 
-                mMonth = cal.get(Calendar.MONTH);
-                mday = cal.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog d1 = new DatePickerDialog(BusinessMain.this, new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        dateStartText.setText(i2 + "/" + (i1 + 1) + "/" + i);
-                        finalCalenderStart.set(i, i1, i2);
-                        bundle.putString("startDate", i2 + "/" + (i1 + 1) + "/" + i);
                     }
-                }, mYear, mMonth, mday);
-                d1.show();
+                    park.put("userID",userID);
+
+                    park.put("Price",Integer.parseInt(price.getText().toString()));
+                    if(flag)
+                        fStore.collection("availables parking").add(park);
+                }
 
             }
         });
-
-        dateBend.setOnClickListener(new View.OnClickListener() {
+        startDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Calendar cal2 = Calendar.getInstance();
-                mYear = cal2.get(Calendar.YEAR);
-                mMonth = cal2.get(Calendar.MONTH);
-                mday = cal2.get(Calendar.DAY_OF_MONTH);
+                Year = cal.get(Calendar.YEAR);
+
+                Month = cal.get(Calendar.MONTH);
+                day = cal.get(Calendar.DAY_OF_MONTH);
 
                 DatePickerDialog d1 = new DatePickerDialog(BusinessMain.this, new DatePickerDialog.OnDateSetListener() {
 
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-//                        int j = cal.compareTo(cal2);
-//                        System.out.println(j);
-//                        if(cal2.get(Calendar.MONTH)<cal.get(Calendar.MONTH)){
-//
-//                            Toast.makeText(getActivity(),"Please choose a valid date",Toast.LENGTH_LONG).show();
-//                        }
+                        startDate.setText(i2 + "/" + (i1 + 1) + "/" + i);
+                        finalCalenderStart.set(i, i1, i2);
+                    }
+                }, Year, Month, day);
+                d1.show();
+            }
+        });
+        endDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Year = cal.get(Calendar.YEAR);
 
+                Month = cal.get(Calendar.MONTH);
+                day = cal.get(Calendar.DAY_OF_MONTH);
 
-                        dateEndText.setText(i2 + "/" + (i1 + 1) + "/" + i);
-                        bundle.putString("endDate", i2 + "/" + (i1 + 1) + "/" + i);
+                DatePickerDialog d1 = new DatePickerDialog(BusinessMain.this, new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                        endDate.setText(i2 + "/" + (i1 + 1) + "/" + i);
                         finalCalenderEnd.set(i, i1, i2);
                     }
-                }, mYear, mMonth, mday);
+                }, Year, Month, day);
                 d1.show();
             }
         });
-        timeBend.setOnClickListener(new View.OnClickListener() {
+        startTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Calendar c2 = Calendar.getInstance();
-                mhour = c2.get(Calendar.HOUR_OF_DAY);
-                mMin = c2.get(Calendar.MINUTE);
+                hour = cal.get(Calendar.HOUR_OF_DAY);
+                Min = cal.get(Calendar.MINUTE);
                 TimePickerDialog t1 = new TimePickerDialog(BusinessMain.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        timeEndText.setText(i + ":" + i1);
-                        finalCalenderEnd.set(Calendar.HOUR_OF_DAY, i);
-                        finalCalenderEnd.set(Calendar.MINUTE, i1);
-                        System.out.println("start: " + finalCalenderStart.getTime().toString() + "end:" + finalCalenderEnd.getTime().toString());
-
-
-                    }
-                }, mhour, mMin, false);
-                t1.show();
-            }
-        });
-        timeStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Calendar c2 = Calendar.getInstance();
-                mhour = c2.get(Calendar.HOUR_OF_DAY);
-                mMin = c2.get(Calendar.MINUTE);
-                TimePickerDialog t1 = new TimePickerDialog(BusinessMain.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        timeStartText.setText(i + ":" + i1);
+                        startTime.setText(i + ":" + i1);
                         finalCalenderStart.set(Calendar.HOUR_OF_DAY, i);
                         finalCalenderStart.set(Calendar.MINUTE, i1);
 
 
                     }
-                }, mhour, mMin, false);
+                }, hour, Min, false);
                 t1.show();
             }
         });
+        endTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hour = cal.get(Calendar.HOUR_OF_DAY);
+                Min = cal.get(Calendar.MINUTE);
+                TimePickerDialog t1 = new TimePickerDialog(BusinessMain.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                        endTime.setText(i + ":" + i1);
+                        finalCalenderEnd.set(Calendar.HOUR_OF_DAY, i);
+                        finalCalenderEnd.set(Calendar.MINUTE, i1);
 
 
-//wait 3 min and add to firebase
-//        Handler handler = new Handler();
-//
-//        handler.postDelayed(new Runnable() {
-//            public void run() {
-//                CollectionReference documentReference = fStore.collection("availables parking");
-//                HashMap<String, Object> park = new HashMap<String, Object>();
-//                Timestamp timestampStart = new Timestamp(finalCalenderStart.getTimeInMillis());
-//                Timestamp timestampEnd = new Timestamp(finalCalenderEnd.getTimeInMillis());
-//                HashMap<String, Object> addressMap=new HashMap<String, Object>();
-//                addressMap.put("Street",street.getText().toString());
-//                addressMap.put("City",city.getText().toString());
-//                addressMap.put("Country",country.getText().toString());
-//                HashMap<String, Object> Rent = new HashMap<String, Object>();
-//                Rent.put("Start", timestampStart);
-//                Rent.put("End", timestampEnd);
-//                park.put("Rent", Rent);
-//                park.put("Address",addressMap);
-//                HashMap<String, Object> location = new HashMap<String, Object>();
-//                try {
-//                    GeoPoint point=new GeoPoint(getLocationFromAddress(getActivity(),address).latitude,getLocationFromAddress(getActivity(),address).longitude);
-//
-//                    park.put("Location",point);
-//                } catch (Exception e) {
-//
-//                }
-//                park.put("userID",userID);
-//                fStore.collection("availables parking").add(park);
-//
-//            }
-//        }, 30000);
-
-
-
-
-
-
+                    }
+                }, hour, Min, false);
+                t1.show();
+            }
+        });
     }
-
     //converting address to latlng
     public LatLng getLocationFromAddress(Context context, String inputtedAddress) {
 
@@ -328,5 +225,4 @@ public class BusinessMain extends BaseActivity {
 
         return resLatLng;
     }
-
 }

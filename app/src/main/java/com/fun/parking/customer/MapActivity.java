@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.fun.parking.R;
@@ -37,7 +38,11 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.maps.android.ui.IconGenerator;
@@ -54,7 +59,9 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     private FirebaseAuth mFAuth;
     private FusedLocationProviderClient mfusedLocationClient;
     private Calendar mStartDate, mEndDate;
-    private String muserId,mStringStartDate,mStringEndDate,mCity,mStreet;
+    private String userId, StringStartDate, StringEndDate;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -141,7 +148,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         startDate.setText(mStartDate.get(Calendar.DAY_OF_MONTH) + " / " +
                 (mStartDate.get(Calendar.MONTH) + 1) + " / " + mStartDate.get(Calendar.YEAR));
         startTime.setText(mStartDate.get(Calendar.HOUR_OF_DAY) + " : " + minutes);
-        mStringStartDate=mStartDate.get(Calendar.DAY_OF_MONTH) + " / " +
+        StringStartDate =mStartDate.get(Calendar.DAY_OF_MONTH) + " / " +
                 (mStartDate.get(Calendar.MONTH) + 1) + " / " + mStartDate.get(Calendar.YEAR)+" "+mStartDate.get(Calendar.HOUR_OF_DAY) + " : " + minutes;
         minutes = mEndDate.get(Calendar.MINUTE) < 10 ? "0" +
                 mEndDate.get(Calendar.MINUTE) : "" + mEndDate.get(Calendar.MINUTE);
@@ -150,7 +157,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                 (mEndDate.get(Calendar.MONTH) + 1) + " / " + mEndDate.get(Calendar.YEAR));
         endTime.setText(mEndDate.get(Calendar.HOUR_OF_DAY) + " : " + minutes);
 
-        mStringEndDate=mEndDate.get(Calendar.DAY_OF_MONTH) + " / " +
+        StringEndDate =mEndDate.get(Calendar.DAY_OF_MONTH) + " / " +
                 (mEndDate.get(Calendar.MONTH) + 1) + " / " + mEndDate.get(Calendar.YEAR)+" "+mEndDate.get(Calendar.HOUR_OF_DAY) + " : " + minutes;
         addAvailableParkingMarkers();
 
@@ -189,33 +196,56 @@ public long[] getHours()
                         Toast.LENGTH_LONG).show();
                 mFstore = FirebaseFirestore.getInstance();
                 mFAuth = FirebaseAuth.getInstance();
-                muserId = mFAuth.getCurrentUser().getUid();
-
-               //update the firebase
-                HashMap<String, Object> orders = new HashMap<String, Object>();
-                HashMap<String, Object> rent = new HashMap<String, Object>();
-                HashMap<String, Object> price = new HashMap<String, Object>();
-
+                userId = mFAuth.getCurrentUser().getUid();
+               final String parkingId=marker.getTitle();
+                //update the firebase
+                boolean taken=false;
+                final Intent intent = new Intent(getApplicationContext(), Orders.class);
                 long hoursDiff[] = getHours();
-                double pricePerHour = Double.parseDouble(marker.getSnippet());
-                double totalPrice = pricePerHour * (hoursDiff[0] + hoursDiff[1] / 60.0);
+                final double pricePerHour = Double.parseDouble(marker.getSnippet());
+                final double totalPrice = pricePerHour * (hoursDiff[0] + hoursDiff[1] / 60.0);
+                DocumentReference documentReference = mFstore.collection("availables parking").document(marker.getTitle());
 
-                price.put("Price per hour", pricePerHour);
-                price.put("Total Price",totalPrice);
-                rent.put("End",new Timestamp(mEndDate.getTimeInMillis()));
-                rent.put("Start",new Timestamp(mStartDate.getTimeInMillis()));
-                orders.put("Rent",rent);
-                orders.put("Price",price);
-                orders.put("Parking id: ", marker.getTitle());
-                orders.put("UserId",muserId);
+                documentReference.addSnapshotListener(MapActivity.this, new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                     String city=documentSnapshot.getString("Address.City");
+                     String street=documentSnapshot.getString("Address.Street");
+                     String country=documentSnapshot.getString("Address.Country");
+                     String houseNum=documentSnapshot.getString("Address.HouseNumber");
+                        final HashMap<String, Object> orders = new HashMap<String, Object>();
+                        final HashMap<String, Object> rent = new HashMap<String, Object>();
+                        final HashMap<String, Object> priceMap = new HashMap<String, Object>();
+                        final HashMap<String, Object> adr = new HashMap<String, Object>();
+                        adr.put("City",city);
+                        adr.put("Country",country);
+                        adr.put("HouseNumber",houseNum);
+                        adr.put("Street",street);
+                        priceMap.put("Price per hour", pricePerHour);
+                        priceMap.put("Total Price",totalPrice);
+                        rent.put("End",new Timestamp(mEndDate.getTimeInMillis()));
+                        rent.put("Start",new Timestamp(mStartDate.getTimeInMillis()));
+                        orders.put("Rent",rent);
+                        orders.put("Price",priceMap);
+                        orders.put("Address",adr);
+                        orders.put("Parking id: ", parkingId);
+                        orders.put("UserId", userId);
+                        mFstore.collection("orders").add(orders);
 
-                mFstore.collection("orders").add(orders);
-                Intent intent = new Intent(getApplicationContext(), Orders.class);
-                intent.putExtra("startDate", mStringStartDate);
-                intent.putExtra("endDate", mStringEndDate);
-                intent.putExtra("city",mCity);
-                intent.putExtra("street",mStreet);
-                intent.putExtra("total price","" + totalPrice);
+                        intent.putExtra("startDate", StringStartDate);
+                        intent.putExtra("endDate", StringEndDate);
+                        intent.putExtra("city",adr.get("City").toString());
+                        intent.putExtra("street",adr.get("Street").toString());
+                        intent.putExtra("houseNumber",adr.get("HouseNumber").toString());
+                        intent.putExtra("total price","" + totalPrice);
+                    }
+                });
+                documentReference.update("available",false);
+
+
+
+
+
                 startActivity(intent);
             }
         });
@@ -263,11 +293,10 @@ public long[] getHours()
                                     Marker m = mMap.addMarker(iconMaker.CreateIcon(document));
                                     InfoWindowData info = new InfoWindowData();
                                     info.setAddress(document.get("Address.City") + ", " +
-                                            document.get("Address.Street"))
+                                            document.get("Address.Street")+" "+document.get("Address.HouseNumber"))
                                             .setPrice("₪" + document.get("Price") + " per hour");
 
-                                    mCity=document.get("Address.City")+"";
-                                    mStreet=document.get("Address.Street")+"";
+
 
                                     m.setTag(info);
                                     m.setSnippet("" + document.get("Price"));
