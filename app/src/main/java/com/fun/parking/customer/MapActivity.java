@@ -256,7 +256,7 @@ public long[] getHours()
                             int parkingSum = 0;
                             for (QueryDocumentSnapshot document : task.getResult())
                             {
-                                if (document.getDate("Rent.End").compareTo(mEndDate.getTime()) > 0
+                                if (document.getDate("Rent.End").compareTo(mEndDate.getTime()) >= 0
                                     && document.getBoolean("available"))
                                 {
                                     parkingSum++;
