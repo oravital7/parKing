@@ -55,7 +55,6 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     private FusedLocationProviderClient mfusedLocationClient;
     private Calendar mStartDate, mEndDate;
     private String muserId,mStringStartDate,mStringEndDate,mCity,mStreet;
-    private int mParkingSum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -240,7 +239,6 @@ public long[] getHours()
     private void addAvailableParkingMarkers()
     {
         mMap.clear();
-        mParkingSum = 0;
 
         final IconMakerFactory iconMaker = new IconMakerFactory(new IconGenerator(this));
 
@@ -255,12 +253,13 @@ public long[] getHours()
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful())
                         {
+                            int parkingSum = 0;
                             for (QueryDocumentSnapshot document : task.getResult())
                             {
                                 if (document.getDate("Rent.End").compareTo(mEndDate.getTime()) > 0
                                     && document.getBoolean("available"))
                                 {
-                                    mParkingSum++;
+                                    parkingSum++;
                                     Marker m = mMap.addMarker(iconMaker.CreateIcon(document));
                                     InfoWindowData info = new InfoWindowData();
                                     info.setAddress(document.get("Address.City") + ", " +
@@ -277,10 +276,10 @@ public long[] getHours()
                             }
 
                             TextView parkingCount = findViewById(R.id.parkingCount);
-                            if (mParkingSum > 0)
-                                parkingCount.setText("Found " + mParkingSum + " parking in your area");
+                            if (parkingSum > 0)
+                                parkingCount.setText("Found " + parkingSum + " parking in your area");
                             else
-                                parkingCount.setText("Try different dates");
+                                parkingCount.setText("We couldn't find any parking in your area, Try different dates");
 
                         } else {
                             Log.d("Map: ", "Error getting documents: ", task.getException());
