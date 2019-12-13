@@ -23,7 +23,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class Login extends AppCompatActivity {
-//    ProgressBar progressBar;
+    ProgressBar mProgressBar;
     FirebaseAuth fAuth;
 
     @Override
@@ -31,9 +31,9 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logint);
 
-       final MyEditText email = findViewById(R.id.Email);
-       final MyEditText password = findViewById(R.id.password);
-//        progressBar = findViewById(R.id.progressBar);
+        final MyEditText email = findViewById(R.id.Email);
+        final MyEditText password = findViewById(R.id.password);
+        mProgressBar = findViewById(R.id.loginProgress);
         fAuth = FirebaseAuth.getInstance();
 
         MyTextView loginBtn = findViewById(R.id.loginBtn);
@@ -68,10 +68,9 @@ public class Login extends AppCompatActivity {
                     return;
                 }
 
-//                progressBar.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.VISIBLE);
 
                 // authenticate the user
-
                 fAuth.signInWithEmailAndPassword(emailStr,passwordStr).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -82,7 +81,7 @@ public class Login extends AppCompatActivity {
                         else
                         {
                             Toast.makeText(Login.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//                            progressBar.setVisibility(View.GONE);
+                            mProgressBar.setVisibility(View.GONE);
                         }
 
                     }
@@ -92,8 +91,8 @@ public class Login extends AppCompatActivity {
         });
 
         if(fAuth.getCurrentUser() != null){
-           startActivity(new Intent(getApplicationContext(),MainActivity.class));
-           finish();
+            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+            finish();
         }
     }
 }

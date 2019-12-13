@@ -133,7 +133,9 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                 mStartDate.get(Calendar.MONTH) == mEndDate.get(Calendar.MONTH))
         {
             long hoursDiff[] = getHours();
-            hours.setText("" + hoursDiff[0] + ":" + hoursDiff[1]);
+            String result = "" + hoursDiff[0];
+            if (hoursDiff[1] > 0) result += "." + hoursDiff[1];
+            hours.setText(result);
         }
         else
             hours.setText("");
@@ -249,7 +251,7 @@ public long[] getHours()
         mMap.setInfoWindowAdapter(customInfoWindow);
 
         mFstore.collection("availables parking")
-                .whereGreaterThanOrEqualTo("Rent.Start", mStartDate.getTime())
+                .whereLessThanOrEqualTo("Rent.Start", mStartDate.getTime())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
