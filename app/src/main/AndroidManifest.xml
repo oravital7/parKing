@@ -31,7 +31,7 @@
             android:name=".test"
             android:exported="true" />
         <activity
-            android:name=".business.BusinessMainActivity"
+            android:name=".business.Test"
             android:exported="true"
             android:label="@string/title_activity_business_navigation"
             android:theme="@style/AppTheme.NoActionBar" />

@@ -6,10 +6,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.fun.parking.R;
+import com.fun.parking.business.BaseActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class Orders extends AppCompatActivity {
+public class Orders extends BaseActivity {
     private TextView orders,mCity, mStreet, mStartTime,mEndTime, mDates,mPrice;
     private FirebaseAuth fAuth;
     private String userId,mess,mParkingID;

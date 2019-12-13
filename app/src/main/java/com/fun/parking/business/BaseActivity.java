@@ -2,6 +2,8 @@ package com.fun.parking.business;
 
 import android.os.Bundle;
 import android.widget.FrameLayout;
+
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,8 +12,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.fun.parking.R;
 
 public class BaseActivity extends AppCompatActivity {
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
     @Override
@@ -24,5 +27,6 @@ public class BaseActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle("parKing");
+
     }
 }
