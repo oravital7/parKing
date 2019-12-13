@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import com.fun.parking.R;
@@ -55,7 +54,8 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     private FirebaseAuth mFAuth;
     private FusedLocationProviderClient mfusedLocationClient;
     private Calendar mStartDate, mEndDate;
-    private String muserId,mAddress,mStringStartDate,mStringEndDate,mCity,mStreet,mParkingID;
+    private String muserId,mStringStartDate,mStringEndDate,mCity,mStreet;
+    private int mParkingSum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -64,7 +64,6 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         setContentView(R.layout.customer_activity_maps);
         mfusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mFstore = FirebaseFirestore.getInstance();
-
         resetTimes();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -73,9 +72,6 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
 
         initAutoCompletePlaces();
-
-
-
    }
 
     private void initAutoCompletePlaces()
@@ -244,6 +240,7 @@ public long[] getHours()
     private void addAvailableParkingMarkers()
     {
         mMap.clear();
+        mParkingSum = 0;
 
         final IconMakerFactory iconMaker = new IconMakerFactory(new IconGenerator(this));
 
@@ -263,6 +260,7 @@ public long[] getHours()
                                 if (document.getDate("Rent.End").compareTo(mEndDate.getTime()) > 0
                                     && document.getBoolean("available"))
                                 {
+                                    mParkingSum++;
                                     Marker m = mMap.addMarker(iconMaker.CreateIcon(document));
                                     InfoWindowData info = new InfoWindowData();
                                     info.setAddress(document.get("Address.City") + ", " +
@@ -277,6 +275,13 @@ public long[] getHours()
                                     m.showInfoWindow();
                                 }
                             }
+
+                            TextView parkingCount = findViewById(R.id.parkingCount);
+                            if (mParkingSum > 0)
+                                parkingCount.setText("Found " + mParkingSum + " parking in your area");
+                            else
+                                parkingCount.setText("Try different dates");
+
                         } else {
                             Log.d("Map: ", "Error getting documents: ", task.getException());
                         }
@@ -293,12 +298,12 @@ public long[] getHours()
         if (layout.getVisibility() == View.VISIBLE)
         {
             layout.setVisibility(View.INVISIBLE);
-            showHideBtn.setText("show");
+            showHideBtn.setText("Show");
         }
         else
         {
             layout.setVisibility(View.VISIBLE);
-            showHideBtn.setText("hide");
+            showHideBtn.setText("Hide");
         }
     }
 

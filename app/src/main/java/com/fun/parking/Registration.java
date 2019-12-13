@@ -5,16 +5,15 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.fun.parking.business.BaseActivity;
+import com.fun.parking.customfonts.MyEditText;
+import com.fun.parking.customfonts.MyTextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,11 +28,7 @@ import java.util.Map;
 
 public class Registration extends BaseActivity {
     public static final String TAG = "TAG";
-    EditText mFullName,mEmail,mPassword,mPhone,mCountry,mStreet,mCity,mHouseNumber;
-    Button mRegisterBtn;
-    TextView mLoginLink;
     FirebaseAuth fAuth;
-    ProgressBar progressBar;
     FirebaseFirestore fStore;
     String userID;
 
@@ -43,31 +38,26 @@ public class Registration extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
-        mFullName = findViewById(R.id.name);
-        mEmail      = findViewById(R.id.Email);
-        mPassword   = findViewById(R.id.password);
-        mPhone      = findViewById(R.id.phone);
-        mRegisterBtn = findViewById(R.id.btnregister);
-        mCountry = findViewById(R.id.country);
-        mStreet = findViewById(R.id.street);
-        mCity = findViewById(R.id.city);
-        mHouseNumber = findViewById(R.id.houseNumber);
-        mLoginLink = findViewById(R.id.loginLink);
-        //mLoginBtn   = findViewById(R.id.createText);
+        final MyEditText mFullName = findViewById(R.id.name);
+        final MyEditText mEmail      = findViewById(R.id.Email);
+        final MyEditText mPassword   = findViewById(R.id.password);
+        final MyEditText mPhone      = findViewById(R.id.phone);
+        final MyEditText mCountry = findViewById(R.id.country);
+        final MyEditText mStreet = findViewById(R.id.street);
+        final MyEditText mCity = findViewById(R.id.city);
+        final MyEditText mHouseNumber = findViewById(R.id.houseNumber);
+        final MyTextView registerView = findViewById(R.id.sin);
+
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
-        progressBar = findViewById(R.id.progressBar);
-
-//        if(fAuth.getCurrentUser() != null){
-//           startActivity(new Intent(getApplicationContext(),MainActivity.class));
-//           finish();
-//        }
+        final ProgressBar progressBar = findViewById(R.id.registraionProgress);
 
 
-        mRegisterBtn.setOnClickListener(new View.OnClickListener() {
+        registerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 Toast.makeText(Registration.this, "it clicked capara.", Toast.LENGTH_SHORT).show();
                 final String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
@@ -78,23 +68,25 @@ public class Registration extends BaseActivity {
                 final String city = mCity.getText().toString();
                 final String houseNumber    = mHouseNumber.getText().toString();
 
-             //   final String
+                //   final String
                 if(TextUtils.isEmpty(email)|| !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
                     mEmail.setError("Email is Required.");
+                    progressBar.setVisibility(View.INVISIBLE);
                     return;
                 }
 
                 if(TextUtils.isEmpty(password)){
                     mPassword.setError("Password is Required.");
+                    progressBar.setVisibility(View.INVISIBLE);
                     return;
                 }
 
                 if(password.length() < 6){
                     mPassword.setError("Password Must be >= 6 Characters");
+                    progressBar.setVisibility(View.INVISIBLE);
                     return;
                 }
 
-//                progressBar.setVisibility(View.VISIBLE);
 
                 // register the user in firebase
 
@@ -104,7 +96,8 @@ public class Registration extends BaseActivity {
                         if(task.isSuccessful()){
                             Toast.makeText(Registration.this, "User Created.", Toast.LENGTH_SHORT).show();
                             userID = fAuth.getCurrentUser().getUid();
-                            DocumentReference documentReference = fStore.collection("users").document(userID);
+                            DocumentReference documentReference = fStore.collection("users")
+                                    .document(userID);
                             Map<String,Object> user = new HashMap<>();
                             Map<String,Object> address = new HashMap<>();
                             user.put("fName",name);
@@ -127,33 +120,22 @@ public class Registration extends BaseActivity {
                                     Log.d(TAG, "onFailure: " + e.toString());
                                 }
                             });
+                            progressBar.setVisibility(View.INVISIBLE);
                             startActivity(new Intent(getApplicationContext(),MainActivity.class));
-
                         }else {
                             Toast.makeText(Registration.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        //    progressBar.setVisibility(View.GONE);
                         }
                     }
                 });
             }
         });
 
-        mLoginLink.setOnClickListener(new View.OnClickListener() {
+        ImageView sback = findViewById(R.id.sback);
+        sback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),Login.class));
+                onBackPressed();
             }
         });
-
-
-
-//        mLoginBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(new Intent(getApplicationContext(),Login.class));
-//            }
-//        });
-
-
     }
 }

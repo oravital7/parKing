@@ -158,6 +158,17 @@
             android:onClick="TimePicker"
             android:textSize="17sp" />
 
+        <TextView
+            android:id="@+id/parkingCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="118dp"
+            android:layout_marginBottom="17dp"
+            android:gravity="center_horizontal" />
+
     </RelativeLayout>
 
     <Button
