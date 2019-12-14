@@ -50,7 +50,9 @@ import com.google.maps.android.ui.IconGenerator;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 public class MapActivity extends BaseActivity implements OnMapReadyCallback {
 
@@ -78,7 +80,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
 
         initAutoCompletePlaces();
-   }
+    }
 
     private void initAutoCompletePlaces()
     {
@@ -115,8 +117,10 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
 
     private void resetTimes()
     {
-        mStartDate = Calendar.getInstance(); // Need to be change to correct timeZone such utc + 2
-        mEndDate = Calendar.getInstance();
+        mStartDate = new GregorianCalendar(TimeZone.getTimeZone("Israel"));
+//        mStartDate = Calendar.getInstance(); // Need to be change to correct timeZone such utc + 2
+        mEndDate = new GregorianCalendar(TimeZone.getTimeZone("Israel"));
+//        mEndDate = Calendar.getInstance();
         mEndDate.set(Calendar.HOUR_OF_DAY, mEndDate.get(Calendar.HOUR_OF_DAY) + 1);
     }
 
@@ -157,22 +161,22 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                 (mEndDate.get(Calendar.MONTH) + 1) + " / " + mEndDate.get(Calendar.YEAR));
         endTime.setText(mEndDate.get(Calendar.HOUR_OF_DAY) + " : " + minutes);
 
-        StringEndDate =mEndDate.get(Calendar.DAY_OF_MONTH) + " / " +
+        StringEndDate = mEndDate.get(Calendar.DAY_OF_MONTH) + " / " +
                 (mEndDate.get(Calendar.MONTH) + 1) + " / " + mEndDate.get(Calendar.YEAR)+" "+mEndDate.get(Calendar.HOUR_OF_DAY) + " : " + minutes;
         addAvailableParkingMarkers();
 
     }
-public long[] getHours()
-{
-    long diff = mEndDate.getTimeInMillis() - mStartDate.getTimeInMillis();
-    long minutes = (diff / 1000) / 60;
-    long hours = minutes / 60;
-    minutes %= 60;
+    public long[] getHours()
+    {
+        long diff = mEndDate.getTimeInMillis() - mStartDate.getTimeInMillis();
+        long minutes = (diff / 1000) / 60;
+        long hours = minutes / 60;
+        minutes %= 60;
 
-    long result[] = {hours, minutes};
+        long result[] = {hours, minutes};
 
-    return result;
-}
+        return result;
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap)
@@ -197,7 +201,7 @@ public long[] getHours()
                 mFstore = FirebaseFirestore.getInstance();
                 mFAuth = FirebaseAuth.getInstance();
                 userId = mFAuth.getCurrentUser().getUid();
-               final String parkingId=marker.getTitle();
+                final String parkingId=marker.getTitle();
                 //update the firebase
                 boolean taken=false;
                 final Intent intent = new Intent(getApplicationContext(), Orders.class);
@@ -206,49 +210,44 @@ public long[] getHours()
                 final double totalPrice = pricePerHour * (hoursDiff[0] + hoursDiff[1] / 60.0);
                 DocumentReference documentReference = mFstore.collection("availables parking").document(marker.getTitle());
 
-                documentReference.addSnapshotListener(MapActivity.this, new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                     String city=documentSnapshot.getString("Address.City");
-                     String street=documentSnapshot.getString("Address.Street");
-                     String country=documentSnapshot.getString("Address.Country");
-                     String houseNum=documentSnapshot.getString("Address.HouseNumber");
-                        final HashMap<String, Object> orders = new HashMap<String, Object>();
-                        final HashMap<String, Object> rent = new HashMap<String, Object>();
-                        final HashMap<String, Object> priceMap = new HashMap<String, Object>();
-                        final HashMap<String, Object> adr = new HashMap<String, Object>();
-                        adr.put("City",city);
-                        adr.put("Country",country);
-                        adr.put("HouseNumber",houseNum);
-                        adr.put("Street",street);
-                        priceMap.put("Price per hour", pricePerHour);
-                        priceMap.put("Total Price",totalPrice);
-                        rent.put("End",new Timestamp(mEndDate.getTimeInMillis()));
-                        rent.put("Start",new Timestamp(mStartDate.getTimeInMillis()));
-                        orders.put("Rent",rent);
-                        orders.put("Price",priceMap);
-                        orders.put("Address",adr);
-                        orders.put("Parking id: ", parkingId);
-                        orders.put("UserId", userId);
-                        mFstore.collection("orders").add(orders);
+                documentReference.get().addOnCompleteListener(
+                        new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                DocumentSnapshot document = task.getResult();
+                                String city = document.getString("Address.City");
+                                String street = document.getString("Address.Street");
+                                String country = document.getString("Address.Country");
+                                String houseNum = document.getString("Address.HouseNumber");
+                                final HashMap<String, Object> orders = new HashMap<String, Object>();
+                                final HashMap<String, Object> rent = new HashMap<String, Object>();
+                                final HashMap<String, Object> priceMap = new HashMap<String, Object>();
+                                final HashMap<String, Object> adr = new HashMap<String, Object>();
+                                adr.put("City", city);
+                                adr.put("Country", country);
+                                adr.put("HouseNumber", houseNum);
+                                adr.put("Street", street);
+                                priceMap.put("Price per hour", pricePerHour);
+                                priceMap.put("Total Price", totalPrice);
+                                rent.put("End", new Timestamp(mEndDate.getTimeInMillis()));
+                                rent.put("Start", new Timestamp(mStartDate.getTimeInMillis()));
+                                orders.put("Rent", rent);
+                                orders.put("Price", priceMap);
+                                orders.put("Address", adr);
+                                orders.put("Parking id: ", parkingId);
+                                orders.put("UserId", userId);
+                                mFstore.collection("orders").add(orders);
 
-                        intent.putExtra("startDate", StringStartDate);
-                        intent.putExtra("endDate", StringEndDate);
-                        intent.putExtra("city",adr.get("City").toString());
-                        intent.putExtra("street",adr.get("Street").toString());
-                        intent.putExtra("houseNumber",adr.get("HouseNumber").toString());
-                        intent.putExtra("total price","" + totalPrice);
-                    }
-                });
+                                intent.putExtra("startDate", StringStartDate);
+                                intent.putExtra("endDate", StringEndDate);
+                                intent.putExtra("city", adr.get("City").toString());
+                                intent.putExtra("street", adr.get("Street").toString());
+                                intent.putExtra("houseNumber", adr.get("HouseNumber").toString());
+                                intent.putExtra("total price", "" + totalPrice);
+                                startActivity(intent);
+                            }});
                 documentReference.update("available",false);
-
-
-
-
-
-                startActivity(intent);
-            }
-        });
+            }});
 
         UpdateTexts();
 
@@ -286,8 +285,8 @@ public long[] getHours()
                             int parkingSum = 0;
                             for (QueryDocumentSnapshot document : task.getResult())
                             {
-                                if (document.getDate("Rent.End").compareTo(mEndDate.getTime()) > 0
-                                    && document.getBoolean("available"))
+                                if (document.getDate("Rent.End").compareTo(mEndDate.getTime()) >= 0
+                                        && document.getBoolean("available"))
                                 {
                                     parkingSum++;
                                     Marker m = mMap.addMarker(iconMaker.CreateIcon(document));
