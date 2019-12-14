@@ -38,16 +38,11 @@
         <activity
             android:name=".test"
             android:exported="true" />
-<<<<<<< HEAD
 
-=======
->>>>>>> 4721ecbf3b46a20622fd515b217734d9afb8cce5
         <activity
             android:name=".Registration"
             android:exported="true" />
-        <activity
-            android:name=".business.BaseActivity"
-            android:exported="true" />
+
 
         <activity
             android:name=".business.BusinessMain"

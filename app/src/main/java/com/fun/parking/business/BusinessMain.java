@@ -86,6 +86,11 @@ public class BusinessMain extends BaseActivity {
                 else{
                     CollectionReference documentReference = fStore.collection("availables parking");
                     boolean flag=true;
+                    final Intent intent = new Intent(getApplicationContext(), BusinessOrder.class);
+                    intent.putExtra("startDate", finalCalenderStart.getTime().toString());
+                    // intent.putExtra("endDate", finalCalenderEnd.toString());
+
+
                     HashMap<String, Object> park = new HashMap<String, Object>();
                     Timestamp timestampStart = new Timestamp(finalCalenderStart.getTimeInMillis());
                     Timestamp timestampEnd = new Timestamp(finalCalenderEnd.getTimeInMillis());
@@ -117,12 +122,9 @@ public class BusinessMain extends BaseActivity {
                     park.put("Price",Integer.parseInt(price.getText().toString()));
                     if(flag)
                         fStore.collection("availables parking").add(park);
+                    startActivity(intent);
                 }
-                final Intent intent = new Intent(getApplicationContext(), BusinessOrder.class);
-                intent.putExtra("startDate", finalCalenderStart.getTime().toString());
-               // intent.putExtra("endDate", finalCalenderEnd.toString());
 
-                startActivity(intent);
 
             }
         });
