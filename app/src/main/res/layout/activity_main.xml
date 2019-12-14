@@ -1,34 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bc_login"
     android:gravity="center"
-    android:orientation="vertical"
-    android:padding="15dp"
-    android:background="@drawable/city_bacground"
+
     tools:context=".MainActivity"
 
     >
 
-    <Button
-        android:id="@+id/findParking"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:cursorVisible="false"
-        android:text="find me parking"
-        android:background="@android:color/transparent"
-        />
+        android:layout_height="match_parent"
+        android:background="@drawable/bc_login_glass"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/rent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="i want to rent a parking"
-        android:background="@android:color/transparent"
-        />
-</LinearLayout>
+
+            <Button
+                android:id="@+id/findParking"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/rent"
+                android:layout_marginBottom="39dp"
+                android:background="@drawable/angle"
+
+                android:text="find me parking"
+                android:textColor="#fff" />
+
+            <Button
+                android:id="@+id/rent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="339dp"
+                android:background="@drawable/angle"
+                android:text="offer my parking spot"
+                android:textColor="#fff" />
+
+    </RelativeLayout>
+</RelativeLayout>
 <!--</androidx.constraintlayout.widget.ConstraintLayout>-->

@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.fun.parking.R;
-import com.fun.parking.business.BaseActivity;
+import com.fun.parking.BaseActivity;
 
 public class MainActivity extends BaseActivity {
 

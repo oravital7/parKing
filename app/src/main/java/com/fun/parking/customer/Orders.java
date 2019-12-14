@@ -6,7 +6,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.fun.parking.R;
-import com.fun.parking.business.BaseActivity;
+import com.fun.parking.BaseActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 

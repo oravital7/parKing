@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.fun.parking.R;
-import com.fun.parking.business.BaseActivity;
+import com.fun.parking.BaseActivity;
 import com.fun.parking.customer.pickers.DatePickerFragment;
 import com.fun.parking.customer.pickers.TimePickerFragment;
 import com.google.android.gms.common.api.Status;

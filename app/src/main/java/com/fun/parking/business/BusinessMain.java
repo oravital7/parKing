@@ -3,6 +3,7 @@ package com.fun.parking.business;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -14,7 +15,9 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.fun.parking.BaseActivity;
 import com.fun.parking.R;
+import com.fun.parking.customer.Orders;
 import com.fun.parking.customfonts.MyEditText;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
@@ -115,6 +118,11 @@ public class BusinessMain extends BaseActivity {
                     if(flag)
                         fStore.collection("availables parking").add(park);
                 }
+                final Intent intent = new Intent(getApplicationContext(), BusinessOrder.class);
+                intent.putExtra("startDate", finalCalenderStart.getTime().toString());
+               // intent.putExtra("endDate", finalCalenderEnd.toString());
+
+                startActivity(intent);
 
             }
         });
@@ -132,6 +140,11 @@ public class BusinessMain extends BaseActivity {
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                         startDate.setText(i2 + "/" + (i1 + 1) + "/" + i);
                         finalCalenderStart.set(i, i1, i2);
+//                        if(cal.after(finalCalenderStart)&&!(cal.equals(finalCalenderStart))){
+//                            Toast.makeText(BusinessMain.this,"enter a  valid Date",Toast.LENGTH_LONG).show();
+//
+//                        }
+
                     }
                 }, Year, Month, day);
                 d1.show();

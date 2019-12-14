@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.fun.parking.business.BaseActivity;
+import com.fun.parking.BaseActivity;
 import com.fun.parking.business.BusinessMain;
 
 import javax.annotation.Nullable;

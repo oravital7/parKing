@@ -12,6 +12,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".business.BusinessOrder"
+            android:label="@string/title_activity_base"
+             />
+        <activity
+            android:name=".BaseActivity"
+            android:label="@string/title_activity_base"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Entrance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,17 +38,14 @@
         <activity
             android:name=".test"
             android:exported="true" />
-        <activity
-            android:name=".business.Test"
-            android:exported="true"
-            android:label="@string/title_activity_business_navigation"
-            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".Registration"
             android:exported="true" />
         <activity
             android:name=".business.BaseActivity"
             android:exported="true" />
+
         <activity
             android:name=".business.BusinessMain"
             android:exported="true" />
