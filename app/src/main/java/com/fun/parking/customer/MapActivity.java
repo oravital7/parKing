@@ -153,7 +153,8 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                 (mStartDate.get(Calendar.MONTH) + 1) + " / " + mStartDate.get(Calendar.YEAR));
         startTime.setText(mStartDate.get(Calendar.HOUR_OF_DAY) + " : " + minutes);
         StringStartDate =mStartDate.get(Calendar.DAY_OF_MONTH) + " / " +
-                (mStartDate.get(Calendar.MONTH) + 1) + " / " + mStartDate.get(Calendar.YEAR)+" "+mStartDate.get(Calendar.HOUR_OF_DAY) + " : " + minutes;
+                (mStartDate.get(Calendar.MONTH) + 1) + " / " + mStartDate.get(Calendar.YEAR) +
+                " "+mStartDate.get(Calendar.HOUR_OF_DAY) + " : " + minutes;
         minutes = mEndDate.get(Calendar.MINUTE) < 10 ? "0" +
                 mEndDate.get(Calendar.MINUTE) : "" + mEndDate.get(Calendar.MINUTE);
 
@@ -162,7 +163,8 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         endTime.setText(mEndDate.get(Calendar.HOUR_OF_DAY) + " : " + minutes);
 
         StringEndDate = mEndDate.get(Calendar.DAY_OF_MONTH) + " / " +
-                (mEndDate.get(Calendar.MONTH) + 1) + " / " + mEndDate.get(Calendar.YEAR)+" "+mEndDate.get(Calendar.HOUR_OF_DAY) + " : " + minutes;
+                (mEndDate.get(Calendar.MONTH) + 1) + " / " + mEndDate.get(Calendar.YEAR) +
+                " " + mEndDate.get(Calendar.HOUR_OF_DAY) + " : " + minutes;
         addAvailableParkingMarkers();
 
     }
