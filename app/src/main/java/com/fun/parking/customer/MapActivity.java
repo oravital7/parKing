@@ -50,7 +50,9 @@ import com.google.maps.android.ui.IconGenerator;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 public class MapActivity extends BaseActivity implements OnMapReadyCallback {
 
@@ -115,8 +117,10 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
 
     private void resetTimes()
     {
-        mStartDate = Calendar.getInstance(); // Need to be change to correct timeZone such utc + 2
-        mEndDate = Calendar.getInstance();
+        mStartDate = new GregorianCalendar(TimeZone.getTimeZone("Israel"));
+//        mStartDate = Calendar.getInstance(); // Need to be change to correct timeZone such utc + 2
+        mEndDate = new GregorianCalendar(TimeZone.getTimeZone("Israel"));
+//        mEndDate = Calendar.getInstance();
         mEndDate.set(Calendar.HOUR_OF_DAY, mEndDate.get(Calendar.HOUR_OF_DAY) + 1);
     }
 
@@ -157,7 +161,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                 (mEndDate.get(Calendar.MONTH) + 1) + " / " + mEndDate.get(Calendar.YEAR));
         endTime.setText(mEndDate.get(Calendar.HOUR_OF_DAY) + " : " + minutes);
 
-        StringEndDate =mEndDate.get(Calendar.DAY_OF_MONTH) + " / " +
+        StringEndDate = mEndDate.get(Calendar.DAY_OF_MONTH) + " / " +
                 (mEndDate.get(Calendar.MONTH) + 1) + " / " + mEndDate.get(Calendar.YEAR)+" "+mEndDate.get(Calendar.HOUR_OF_DAY) + " : " + minutes;
         addAvailableParkingMarkers();
 

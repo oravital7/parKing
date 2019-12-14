@@ -31,11 +31,6 @@
             android:name=".test"
             android:exported="true" />
         <activity
-            android:name=".business.Test"
-            android:exported="true"
-            android:label="@string/title_activity_business_navigation"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".Registration"
             android:exported="true" />
         <activity
