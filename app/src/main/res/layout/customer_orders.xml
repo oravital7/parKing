@@ -8,43 +8,78 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@drawable/bc_login"
+    android:gravity="center_vertical"
     android:orientation="vertical"
     android:padding="15dp"
     tools:context=".Login">
 
     <TextView
+        android:id="@+id/orderDit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="40dp"
+        android:text="Order details"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
         android:id="@+id/city"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
-        android:background="@drawable/order_city"
-        android:fontFamily="serif"
-        android:text="City"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#00CF2929"
-        android:textSize="30sp" />
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:text="TextView"
+        android:textStyle="bold"
+        android:textColor="@color/places_text_black_alpha_87"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/street"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:layout_margin="15dp"
+        android:text="TextView"
+        android:textStyle="bold"
+        android:textColor="@color/places_text_black_alpha_87"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/startTime"
+        android:layout_margin="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textStyle="bold"
+        android:textColor="@color/places_text_black_alpha_87"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/endTime"
+        android:layout_margin="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textStyle="bold"
+        android:textColor="@color/places_text_black_alpha_87"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/price"
+        android:layout_margin="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textStyle="bold"
+        android:textColor="@color/places_text_black_alpha_87"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/rent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="@drawable/angle"
+        android:text="back"
+        android:textColor="#fff" />
 </LinearLayout>

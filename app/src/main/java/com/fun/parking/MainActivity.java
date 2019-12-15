@@ -7,12 +7,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.fun.parking.business.BusinessMainActivity;
-import com.fun.parking.business.DailyRent;
+import com.fun.parking.BaseActivity;
+import com.fun.parking.business.BusinessMain;
 
 import javax.annotation.Nullable;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     Button mRent, mFind;
 
     @Override
@@ -33,8 +33,7 @@ public class MainActivity extends AppCompatActivity {
         mRent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivity(new Intent(getApplicationContext(), com.fun.parking.customer.MainActivity.class));
-                startActivity(new Intent(getApplicationContext(), com.fun.parking.business.BusinessMainActivity.class));
+                startActivity(new Intent(getApplicationContext(), com.fun.parking.business.BusinessMain.class));
             }
         });
 

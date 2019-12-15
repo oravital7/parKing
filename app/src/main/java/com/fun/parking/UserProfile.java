@@ -1,5 +1,6 @@
 package com.fun.parking;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,12 +9,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+
+import org.w3c.dom.Document;
 
 import javax.annotation.Nullable;
 
@@ -40,32 +45,30 @@ public class UserProfile extends AppCompatActivity {
 
        DocumentReference documentReference = fStore.collection("users").document(userId);
 
-        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                phone.setText(documentSnapshot.getString("phone"));
-                fullName.setText(documentSnapshot.getString("fName"));
-                email.setText(documentSnapshot.getString("email"));
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists())
+                {
+                    phone.setText(document.getString("phone"));
+                    fullName.setText(document.getString("fName"));
+                    email.setText(document.getString("email"));
+                }
 
             }
         });
+
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), Login.class));
-                FirebaseAuth.getInstance().signOut();//logou
+                FirebaseAuth.getInstance().signOut(); // logout
                 finish();
-                //logout(v);
             }
         });
 
 
     }
 
-
-    public void logout(View view) {
-//        FirebaseAuth.getInstance().signOut();//logout
-//        startActivity(new Intent(getApplicationContext(), Login.class));
-//        finish();
-    }
 }
