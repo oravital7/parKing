@@ -48,8 +48,10 @@ public class BusinessMain extends BaseActivity {
 
         final Button okB=findViewById(R.id.okButton);
         final MyEditText startDate=findViewById(R.id.StartDateText);
+        startDate.setText(cal.get(Calendar.DAY_OF_MONTH)+"/"+cal.get(Calendar.MONTH)+"/"+cal.get(Calendar.YEAR));
         final MyEditText startTime=findViewById(R.id.StarTimeText);
         final MyEditText endDate=findViewById(R.id.EndDateText);
+        endDate.setText(cal.get(Calendar.DAY_OF_MONTH)+"/"+cal.get(Calendar.MONTH)+"/"+cal.get(Calendar.YEAR));
         final MyEditText endTime=findViewById(R.id.endHourText);
         final MyEditText country=findViewById(R.id.countryText);
         final MyEditText city=findViewById(R.id.cityText);
@@ -88,7 +90,7 @@ public class BusinessMain extends BaseActivity {
                     boolean flag=true;
                     final Intent intent = new Intent(getApplicationContext(), BusinessOrder.class);
                     intent.putExtra("startDate", finalCalenderStart.getTime().toString());
-                    // intent.putExtra("endDate", finalCalenderEnd.toString());
+                    intent.putExtra("endDate", finalCalenderEnd.getTime().toString());
 
 
                     HashMap<String, Object> park = new HashMap<String, Object>();
@@ -164,8 +166,13 @@ public class BusinessMain extends BaseActivity {
 
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        endDate.setText(i2 + "/" + (i1 + 1) + "/" + i);
                         finalCalenderEnd.set(i, i1, i2);
+                        if(finalCalenderEnd.before(finalCalenderStart)){
+                            Toast.makeText(BusinessMain.this,"Please enter valid dates",Toast.LENGTH_LONG).show();
+                        }
+                        else
+                         endDate.setText(i2 + "/" + (i1 + 1) + "/" + i);
+
                     }
                 }, Year, Month, day);
                 d1.show();
