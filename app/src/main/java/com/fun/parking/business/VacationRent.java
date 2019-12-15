@@ -160,6 +160,7 @@ public class VacationRent extends Fragment {
                 }
                 park.put("userID",userID);
                 park.put("Price",pricePerHour);
+                park.put("available", true);
                 fStore.collection("availables parking").add(park);
 //                FragmentManager f = getActivity().getSupportFragmentManager();
 //                f.beginTransaction().replace(R.id.fragment_container, P).commit();
