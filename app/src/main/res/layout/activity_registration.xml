@@ -134,7 +134,7 @@ android:background="@drawable/bc_login">
             android:background="#ADCCE2" />
 
         <com.fun.parking.customfonts.MyEditText
-            android:id="@+id/city"
+            android:id="@+id/street"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="22dp"

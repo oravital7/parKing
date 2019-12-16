@@ -115,7 +115,8 @@ public class BusinessMain extends BaseActivity {
 
                         if(point==null)
                             flag=false;
-                        park.put("Location",point);
+                        else
+                         park.put("Location",point);
                     } catch (Exception e) {
 
                     }
