@@ -32,14 +32,16 @@ import com.google.firebase.firestore.GeoPoint;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 public class BusinessMain extends BaseActivity {
     private String userID;
     private String cityS,countryS,streetS,houseNumberS,fullAddress;
-    private final Calendar finalCalenderStart = Calendar.getInstance();
-    private final Calendar finalCalenderEnd = Calendar.getInstance();
+    private final Calendar finalCalenderStart = new GregorianCalendar(TimeZone.getTimeZone("Israel"));;
+    private final Calendar finalCalenderEnd = new GregorianCalendar(TimeZone.getTimeZone("Israel"));;
     private int Year, Month, day, hour, Min;
     private final Calendar cal = Calendar.getInstance();
     protected void onCreate(Bundle savedInstanceState) {
