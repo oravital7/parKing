@@ -30,14 +30,6 @@
         <activity
             android:name=".UserProfile"
             android:exported="true" />
-        <activity
-            android:name=".customer.Profile"
-            android:exported="true"
-            android:label="@string/title_activity_profile"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".test"
-            android:exported="true" />
 
         <activity
             android:name=".Registration"

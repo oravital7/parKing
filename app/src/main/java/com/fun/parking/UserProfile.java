@@ -22,8 +22,8 @@ import org.w3c.dom.Document;
 
 import javax.annotation.Nullable;
 
-public class UserProfile extends AppCompatActivity {
-
+//public class UserProfile extends AppCompatActivity {
+public class UserProfile extends BaseActivity{
     TextView fullName,email,phone,address;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;

@@ -39,11 +39,11 @@ public class Orders extends BaseActivity {
  //       mParkingID = getIntent().getStringExtra("ParkingID");
 
 
-        mCity.setText("City:"+getIntent().getStringExtra("city"));
-        mStreet.setText("Street:"+getIntent().getStringExtra("street"));
-        mStartTime.setText("Start:"+getIntent().getStringExtra("startDate"));
-        mEndTime.setText("End:"+getIntent().getStringExtra("endDate"));
-        mPrice.setText("Total price:"+getIntent().getStringExtra("total price"));
+        mCity.setText("City:  "+getIntent().getStringExtra("city"));
+        mStreet.setText("Street:  "+getIntent().getStringExtra("street"));
+        mStartTime.setText("Start:  "+getIntent().getStringExtra("startDate"));
+        mEndTime.setText("End:  "+getIntent().getStringExtra("endDate"));
+        mPrice.setText("Total price:  "+getIntent().getStringExtra("total price"));
 
         mMenu = findViewById(R.id.rent);
 //

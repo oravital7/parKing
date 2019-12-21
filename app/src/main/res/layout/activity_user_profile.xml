@@ -10,7 +10,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="349dp">
+        android:layout_height="316dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,11 +38,11 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="82dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="84dp"
                     android:orientation="horizontal"
                     android:weightSum="3">
 
