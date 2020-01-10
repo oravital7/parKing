@@ -50,10 +50,10 @@ public class BusinessMain extends BaseActivity {
 
         final Button okB=findViewById(R.id.okButton);
         final MyEditText startDate=findViewById(R.id.StartDateText);
-        startDate.setText(cal.get(Calendar.DAY_OF_MONTH)+"/"+cal.get(Calendar.MONTH)+"/"+cal.get(Calendar.YEAR));
+        startDate.setText(cal.get(Calendar.DAY_OF_MONTH)+"/"+cal.get(Calendar.MONTH)+1+"/"+cal.get(Calendar.YEAR));
         final MyEditText startTime=findViewById(R.id.StarTimeText);
         final MyEditText endDate=findViewById(R.id.EndDateText);
-        endDate.setText(cal.get(Calendar.DAY_OF_MONTH)+"/"+cal.get(Calendar.MONTH)+"/"+cal.get(Calendar.YEAR));
+        endDate.setText(cal.get(Calendar.DAY_OF_MONTH)+"/"+cal.get(Calendar.MONTH)+1+"/"+cal.get(Calendar.YEAR));
         final MyEditText endTime=findViewById(R.id.endHourText);
         final MyEditText country=findViewById(R.id.countryText);
         final MyEditText city=findViewById(R.id.cityText);
@@ -124,7 +124,7 @@ public class BusinessMain extends BaseActivity {
                     }
                     park.put("userID",userID);
 
-                    park.put("Price",Integer.parseInt(price.getText().toString()));
+                    park.put("Price",Double.parseDouble(price.getText().toString()));
                     if(flag)
                         fStore.collection("availables parking").add(park);
                     startActivity(intent);
@@ -145,8 +145,8 @@ public class BusinessMain extends BaseActivity {
 
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        startDate.setText(i2 + "/" + (i1 + 1) + "/" + i);
-                        finalCalenderStart.set(i, i1, i2);
+                        startDate.setText(i2 + "/" + i1+1 + "/" + i);
+                        finalCalenderStart.set(i, i1+1, i2);
 //                        if(cal.after(finalCalenderStart)&&!(cal.equals(finalCalenderStart))){
 //                            Toast.makeText(BusinessMain.this,"enter a  valid Date",Toast.LENGTH_LONG).show();
 //
@@ -169,12 +169,12 @@ public class BusinessMain extends BaseActivity {
 
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        finalCalenderEnd.set(i, i1, i2);
+                        finalCalenderEnd.set(i, i1+1, i2);
                         if(finalCalenderEnd.before(finalCalenderStart)){
                             Toast.makeText(BusinessMain.this,"Please enter valid dates",Toast.LENGTH_LONG).show();
                         }
                         else
-                         endDate.setText(i2 + "/" + (i1 + 1) + "/" + i);
+                         endDate.setText(i2 + "/" + (i1+1) + "/" + i);
 
                     }
                 }, Year, Month, day);
