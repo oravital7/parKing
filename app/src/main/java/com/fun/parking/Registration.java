@@ -58,7 +58,6 @@ public class Registration extends BaseActivity {
             @Override
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
-                Toast.makeText(Registration.this, "it clicked capara.", Toast.LENGTH_SHORT).show();
                 final String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
                 final String name = mFullName.getText().toString();

@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -28,20 +29,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UserProfile"
-            android:exported="true" />
+            android:name=".UserProfile" />
 
         <activity
-            android:name=".Registration"
-            android:exported="true" />
+            android:name=".Registration" />
 
 
         <activity
-            android:name=".business.BusinessMain"
-            android:exported="true" />
+            android:name=".business.BusinessMain" />
         <activity
-            android:name=".customer.Orders"
-            android:exported="true" />
+            android:name=".customer.Orders" />
         <activity
             android:name=".Login"
             android:exported="true" />
@@ -54,8 +51,7 @@
             android:name=".customer.MapActivity"
             android:label="@string/title_activity_customer__maps" />
         <activity
-            android:name=".customer.MainActivity"
-            android:exported="true" />
+            android:name=".customer.MainActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

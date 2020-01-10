@@ -1,6 +1,8 @@
 package com.fun.parking;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,7 +23,11 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         mRent = findViewById(R.id.rent);
         mFind = findViewById(R.id.findParking);
-        
+
+
+        ActivityCompat.requestPermissions(this, new
+                String[]{Manifest.permission.ACCESS_FINE_LOCATION},99);
+
 
         mFind.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -7,7 +7,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.maps.android.ui.IconGenerator;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 public class IconMakerFactory {
 
@@ -15,13 +14,13 @@ public class IconMakerFactory {
 
     public IconMakerFactory(IconGenerator iconFactory) {
         this.iconFactory = iconFactory;
-//        init();
+        init();
     }
 
-//    private void init()
-//    {
-//        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-//    }
+    private void init()
+    {
+        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
+    }
 
     public MarkerOptions CreateIcon(QueryDocumentSnapshot document)
     {
@@ -31,6 +30,13 @@ public class IconMakerFactory {
         return new MarkerOptions().
                 icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_parking/*iconFactory.makeIcon(text)*/)).
                 position(latLng).title(document.getId());
+    }
+
+    public MarkerOptions createCurrentLocationIcon(LatLng latLng)
+    {
+        return new MarkerOptions().
+                icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_crown)).
+                position(latLng);
     }
 
 //    private String makeTitle(QueryDocumentSnapshot document)
