@@ -1,17 +1,23 @@
 package com.fun.parking;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.fun.parking.R;
 import com.google.android.material.navigation.NavigationView;
@@ -23,23 +29,42 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
 public class BaseActivity extends AppCompatActivity {
+    DrawerLayout fullView;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
+
     @Override
-    public void setContentView(int layoutResID)
-    {
-        DrawerLayout fullView = (DrawerLayout) getLayoutInflater().inflate(R.layout.base_activity, null);
+    public void setContentView(int layoutResID) {
+         fullView = (DrawerLayout) getLayoutInflater().inflate(R.layout.base_activity, null);
         FrameLayout activityContainer = (FrameLayout) fullView.findViewById(R.id.activity_content);
         getLayoutInflater().inflate(layoutResID, activityContainer, true);
         super.setContentView(fullView);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle("parKing");
-//        NavigationView navigationView = (NavigationView) findViewById(R.);
-//        View headerView = navigationView.getHeaderView(0);
+       NavigationView navigationView = (NavigationView) findViewById(R.id.navigationView);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // set item as selected to persist highlight
+                        menuItem.setChecked(true);
+                        switch (menuItem.getItemId()) {
+                            case R.id.nav_profile:
+                                Intent intent = new Intent(getBaseContext(), UserProfile.class);
+                                startActivity(intent);
+                                //  f1.beginTransaction().replace(R.id.fragment_container,v).commit();
+
+                            break;
+                        }
+                        fullView.closeDrawer(GravityCompat.START);
+                        return true;
+                    }
+                });
+        //      View headerView = navigationView.getHeaderView(0);
 //        TextView navUsername = (TextView) headerView.findViewById(R.id.navUsername);
 //        navUsername.setText("Your Text Here");
 //        LayoutInflater inflater = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -64,4 +89,7 @@ public class BaseActivity extends AppCompatActivity {
 
 
     }
-}
+
+
+    }
+
