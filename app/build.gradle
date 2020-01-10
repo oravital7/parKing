@@ -27,9 +27,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.2.0'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.google.android.libraries.places:places:2.1.0'
-
+    implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.google.firebase:firebase-database:16.0.4'
-
+    implementation 'com.google.firebase:firebase-storage:16.0.4'
     implementation 'com.squareup:android-times-square:1.6.5@aar'
     implementation 'com.github.jjobes:slideDateTimePicker:1.+'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
