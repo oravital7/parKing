@@ -14,8 +14,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".business.BusinessOrder"
-            android:label="@string/title_activity_base"
-             />
+            android:label="@string/title_activity_base" />
         <activity
             android:name=".BaseActivity"
             android:label="@string/title_activity_base"
@@ -30,12 +29,9 @@
         <activity
             android:name=".UserProfile"
             android:exported="true" />
-
         <activity
             android:name=".Registration"
             android:exported="true" />
-
-
         <activity
             android:name=".business.BusinessMain"
             android:exported="true" />
