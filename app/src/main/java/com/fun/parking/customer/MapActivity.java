@@ -282,7 +282,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful())
+                        if (task.isSuccessful() && task.getResult() != null)
                         {
                             int parkingSum = 0;
                             for (QueryDocumentSnapshot document : task.getResult())

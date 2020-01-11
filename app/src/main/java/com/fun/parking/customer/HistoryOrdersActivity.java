@@ -55,9 +55,11 @@ public class HistoryOrdersActivity extends BaseActivity {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task)
                 {
-
-                    for (QueryDocumentSnapshot document : task.getResult())
+                    if (task.getResult() != null)
+                    {
+                        for (QueryDocumentSnapshot document : task.getResult())
                         mOrderList.add(Order.buildWithFireStore(document));
+                    }
 
                     adapter.notifyDataSetChanged();
                 }
