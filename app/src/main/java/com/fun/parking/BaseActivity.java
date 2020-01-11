@@ -19,6 +19,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+
 public class BaseActivity extends AppCompatActivity {
     DrawerLayout fullView;
     protected void onCreate(Bundle savedInstanceState)
@@ -41,6 +43,10 @@ public class BaseActivity extends AppCompatActivity {
         FirebaseFirestore fStore;
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        fStore.setFirestoreSettings(settings);
         String userId;
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigationView);
         View headerView = navigationView.getHeaderView(0);
