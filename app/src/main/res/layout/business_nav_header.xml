@@ -1,31 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="176dp"
     android:id="@+id/navi"
-    android:background="@color/colorPrimary"
+    android:background="@drawable/bc_login"
     android:gravity="bottom"
     android:orientation="vertical"
-    android:padding="16dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_parking" />
+    <RelativeLayout
+        android:layout_width="411dp"
+        android:layout_height="176dp"
+        android:background="@drawable/bc_login_glass"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/nameProfile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="6dp"
-        android:text=""
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        <ImageView
+            android:layout_width="173dp"
+            android:layout_height="86dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="220dp"
+            android:layout_marginEnd="18dp"
+            android:layout_marginBottom="70dp"
+            android:src="@drawable/ic_parking" />
 
-    <TextView
-        android:id="@+id/AddressProfile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Address: Yael Rom 13,Tel-Aviv" />
+        <TextView
+            android:id="@+id/nameProfile"
+            android:layout_width="226dp"
+            android:layout_height="53dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="26dp"
+            android:layout_marginBottom="63dp"
+            android:paddingTop="6dp"
+            android:text="Ariel Bar"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/AddressProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="134dp"
+            android:layout_marginBottom="51dp"
+            android:text="Address: Yael Rom 13,Tel-Aviv" />
+    </RelativeLayout>
+</RelativeLayout>

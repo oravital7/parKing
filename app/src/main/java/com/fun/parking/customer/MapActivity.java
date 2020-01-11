@@ -1,8 +1,10 @@
 package com.fun.parking.customer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.fun.parking.R;
@@ -31,7 +32,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -40,9 +40,7 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.maps.android.ui.IconGenerator;
@@ -63,7 +61,8 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     private Calendar mStartDate, mEndDate;
     private String userId, StringStartDate, StringEndDate;
 
-
+    private LatLng mCurrentLocation;
+    private LocationManager mLocationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -74,10 +73,14 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         mFstore = FirebaseFirestore.getInstance();
         resetTimes();
 
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mCurrentLocation = new LatLng(32.1005821, 34.8817902);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
 
         initAutoCompletePlaces();
     }
@@ -118,9 +121,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     private void resetTimes()
     {
         mStartDate = new GregorianCalendar(TimeZone.getTimeZone("Israel"));
-//        mStartDate = Calendar.getInstance(); // Need to be change to correct timeZone such utc + 2
         mEndDate = new GregorianCalendar(TimeZone.getTimeZone("Israel"));
-//        mEndDate = Calendar.getInstance();
         mEndDate.set(Calendar.HOUR_OF_DAY, mEndDate.get(Calendar.HOUR_OF_DAY) + 1);
     }
 
@@ -251,30 +252,28 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                 documentReference.update("available",false);
             }});
 
+        try {
+            Location location =  mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location != null)
+                mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        }
+        catch (SecurityException e){}
+
         UpdateTexts();
 
-        mfusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        Toast.makeText(MapActivity.this, "" + location.getLatitude()
-                                + " " + location.getLongitude(), Toast.LENGTH_SHORT);
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(
-                                new LatLng(location.getLatitude(), location.getLongitude())));
-                    }
-                });
-        LatLng test = new LatLng(32.1005821, 34.8817902);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(test, 16.0f));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, 16.0f));
     }
+
 
     private void addAvailableParkingMarkers()
     {
         mMap.clear();
 
-        final IconMakerFactory iconMaker = new IconMakerFactory(new IconGenerator(this));
+        final IconMakerFactory iconMaker = new IconMakerFactory();
 
         MapWindowInfoCustomize customInfoWindow = new MapWindowInfoCustomize(this);
         mMap.setInfoWindowAdapter(customInfoWindow);
+        mMap.addMarker(iconMaker.createCurrentLocationIcon(mCurrentLocation)).setTag("currentLocation");
 
         mFstore.collection("availables parking")
                 .whereLessThanOrEqualTo("Rent.Start", mStartDate.getTime())
@@ -296,8 +295,6 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                                     info.setAddress(document.get("Address.City") + ", " +
                                             document.get("Address.Street")+" "+document.get("Address.HouseNumber"))
                                             .setPrice("₪" + document.get("Price") + " per hour");
-
-
 
                                     m.setTag(info);
                                     m.setSnippet("" + document.get("Price"));

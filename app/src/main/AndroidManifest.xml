@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <uses-permission-sdk-23 android:name="android.permission.CAMERA" />
 
@@ -16,9 +17,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
         <activity
             android:name=".business.BusinessOrder"
             android:label="@string/title_activity_base" />
+        <activity
+            android:name=".ContactForm"
+            android:label="@string/title_activity_base"
+            />
         <activity
             android:name=".BaseActivity"
             android:label="@string/title_activity_base"
@@ -36,12 +50,11 @@
         <activity
             android:name=".Registration"
             android:exported="true" />
+
         <activity
-            android:name=".business.BusinessMain"
-            android:exported="true" />
+            android:name=".business.BusinessMain" />
         <activity
-            android:name=".customer.Orders"
-            android:exported="true" />
+            android:name=".customer.Orders" />
         <activity
             android:name=".Login"
             android:exported="true" />
@@ -56,8 +69,7 @@
             android:name=".customer.MapActivity"
             android:label="@string/title_activity_customer__maps" />
         <activity
-            android:name=".customer.MainActivity"
-            android:exported="true" />
+            android:name=".customer.MainActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
