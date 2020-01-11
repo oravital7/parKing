@@ -1,43 +1,33 @@
 package com.fun.parking;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
-import com.fun.parking.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-
 public class BaseActivity extends AppCompatActivity {
     DrawerLayout fullView;
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
     @Override
-    public void setContentView(int layoutResID) {
+    public void setContentView(int layoutResID)
+    {
          fullView = (DrawerLayout) getLayoutInflater().inflate(R.layout.base_activity, null);
         FrameLayout activityContainer = (FrameLayout) fullView.findViewById(R.id.activity_content);
         getLayoutInflater().inflate(layoutResID, activityContainer, true);
@@ -45,51 +35,62 @@ public class BaseActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle("parKing");
-       NavigationView navigationView = (NavigationView) findViewById(R.id.navigationView);
+        FirebaseAuth fAuth;
+        FirebaseFirestore fStore;
+        fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        String userId;
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigationView);
+        View headerView = navigationView.getHeaderView(0);
+        final TextView name=(TextView)headerView.findViewById(R.id.nameProfile);
+        final TextView adr=(TextView)headerView.findViewById(R.id.AddressProfile);
+        userId = fAuth.getCurrentUser().getUid();
+        DocumentReference documentReference = fStore.collection("users").document(userId);
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists())
+                {
+                   //set the header with the user's details.
+                    String address=document.getString("address.street");
+                    address+=document.getString("address.houseNumber")+",";
+                    address+=document.getString("address.city");
+                    adr.setText(address);
+                    name.setText(document.getString("fName"));
+
+                }
+
+            }
+        });
+
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         // set item as selected to persist highlight
                         menuItem.setChecked(true);
+                        Intent intent=null;
                         switch (menuItem.getItemId()) {
-                            case R.id.nav_profile:
-                                Intent intent = new Intent(getBaseContext(), UserProfile.class);
+
+                            case R.id.nav_profile: {
+                                 intent = new Intent(getBaseContext(), UserProfile.class);
                                 startActivity(intent);
                                 //  f1.beginTransaction().replace(R.id.fragment_container,v).commit();
-
+                            }
                             break;
+                            case R.id.Contact_us:
+                                 intent = new Intent(getBaseContext(), ContactForm.class);
+                                startActivity(intent);
+
                         }
+
                         fullView.closeDrawer(GravityCompat.START);
                         return true;
                     }
                 });
-        //      View headerView = navigationView.getHeaderView(0);
-//        TextView navUsername = (TextView) headerView.findViewById(R.id.navUsername);
-//        navUsername.setText("Your Text Here");
-//        LayoutInflater inflater = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//
-//        View vi = inflater.inflate(R.layout.business_nav_header, null); //log.xml is your file.
-//        final TextView name = (TextView)vi.findViewById(R.id.nameProfile);
-//        name.setText("vlvlvllvlvlvlvlvlv");//get a reference to the textview on the log.xml file.
-//        final FirebaseAuth fAuth = FirebaseAuth.getInstance();
-//        final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
-//        String userID = fAuth.getCurrentUser().getUid();
-//        DocumentReference documentReference = fStore.collection("users").document(userID);
-//        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-//            @Override
-//            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
-//                name.setText(documentSnapshot.getString("fName"));
-//                String address=documentSnapshot.getString("address.street")+" "+documentSnapshot.getString("address.houseNumber")
-//                        +" "+documentSnapshot.getString("address.city")+" "+documentSnapshot.getString("address.country");
-//             //  adr.setText(address);
-//
-//            }
-//        });
-
 
     }
-
 
     }
 

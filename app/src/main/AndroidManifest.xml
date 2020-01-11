@@ -16,10 +16,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
         <activity
             android:name=".business.BusinessOrder"
             android:label="@string/title_activity_base"
              />
+        <activity
+            android:name=".ContactForm"
+            android:label="@string/title_activity_base"
+            />
         <activity
             android:name=".BaseActivity"
             android:label="@string/title_activity_base"

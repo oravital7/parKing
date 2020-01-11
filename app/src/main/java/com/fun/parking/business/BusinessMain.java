@@ -15,11 +15,15 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.fun.parking.BaseActivity;
 import com.fun.parking.R;
 import com.fun.parking.customer.Orders;
 import com.fun.parking.customfonts.MyEditText;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -44,6 +48,7 @@ public class BusinessMain extends BaseActivity {
     private final Calendar finalCalenderEnd = new GregorianCalendar(TimeZone.getTimeZone("Israel"));;
     private int Year, Month, day, hour, Min;
     private final Calendar cal = Calendar.getInstance();
+    private String start,end;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.business_main);
@@ -51,9 +56,11 @@ public class BusinessMain extends BaseActivity {
         final Button okB=findViewById(R.id.okButton);
         final MyEditText startDate=findViewById(R.id.StartDateText);
         startDate.setText(cal.get(Calendar.DAY_OF_MONTH)+"/"+cal.get(Calendar.MONTH)+1+"/"+cal.get(Calendar.YEAR));
+        start=cal.get(Calendar.DAY_OF_MONTH)+"/"+cal.get(Calendar.MONTH)+1+"/"+cal.get(Calendar.YEAR);
         final MyEditText startTime=findViewById(R.id.StarTimeText);
         final MyEditText endDate=findViewById(R.id.EndDateText);
         endDate.setText(cal.get(Calendar.DAY_OF_MONTH)+"/"+cal.get(Calendar.MONTH)+1+"/"+cal.get(Calendar.YEAR));
+        end=cal.get(Calendar.DAY_OF_MONTH)+"/"+cal.get(Calendar.MONTH)+1+"/"+cal.get(Calendar.YEAR);
         final MyEditText endTime=findViewById(R.id.endHourText);
         final MyEditText country=findViewById(R.id.countryText);
         final MyEditText city=findViewById(R.id.cityText);
@@ -89,10 +96,11 @@ public class BusinessMain extends BaseActivity {
                 }
                 else{
                     CollectionReference documentReference = fStore.collection("availables parking");
+
                     boolean flag=true;
                     final Intent intent = new Intent(getApplicationContext(), BusinessOrder.class);
-                    intent.putExtra("startDate", finalCalenderStart.getTime().toString());
-                    intent.putExtra("endDate", finalCalenderEnd.getTime().toString());
+                    intent.putExtra("startDate", start);
+                    intent.putExtra("endDate", end);
 
 
                     HashMap<String, Object> park = new HashMap<String, Object>();
@@ -125,9 +133,27 @@ public class BusinessMain extends BaseActivity {
                     park.put("userID",userID);
 
                     park.put("Price",Double.parseDouble(price.getText().toString()));
-                    if(flag)
-                        fStore.collection("availables parking").add(park);
-                    startActivity(intent);
+                   final  StringBuilder parkingKey=new StringBuilder("");
+                    if(flag) {
+
+                        fStore.collection("availables parking").add(park).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentReference docRef = task.getResult();
+                                    parkingKey.append(docRef.getId()) ;
+                                    intent.putExtra("parkingId",parkingKey.toString());
+                                    startActivity(intent);
+
+
+                                }
+                            }
+                        });
+
+
+                    }
+//                    intent.putExtra("parkingId",parkingKey.toString());
+//                    startActivity(intent);
                 }
 
 
@@ -146,6 +172,7 @@ public class BusinessMain extends BaseActivity {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                         startDate.setText(i2 + "/" + i1+1 + "/" + i);
+                        start=i2 + "/"+ i1+1 + "/"+ i;
                         finalCalenderStart.set(i, i1+1, i2);
 //                        if(cal.after(finalCalenderStart)&&!(cal.equals(finalCalenderStart))){
 //                            Toast.makeText(BusinessMain.this,"enter a  valid Date",Toast.LENGTH_LONG).show();
@@ -175,6 +202,7 @@ public class BusinessMain extends BaseActivity {
                         }
                         else
                          endDate.setText(i2 + "/" + (i1+1) + "/" + i);
+                        end=i2 + "/"+ i1+1 + "/"+ i;
 
                     }
                 }, Year, Month, day);
@@ -189,9 +217,11 @@ public class BusinessMain extends BaseActivity {
                 TimePickerDialog t1 = new TimePickerDialog(BusinessMain.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        startTime.setText(i + ":" + i1);
                         finalCalenderStart.set(Calendar.HOUR_OF_DAY, i);
                         finalCalenderStart.set(Calendar.MINUTE, i1);
+                        String minutes = finalCalenderStart.get(Calendar.MINUTE) < 10 ? "0" +
+                                finalCalenderStart.get(Calendar.MINUTE) : "" + finalCalenderStart.get(Calendar.MINUTE);
+                        startTime.setText(finalCalenderStart.get(Calendar.HOUR_OF_DAY)+ ":" +minutes);
 
 
                     }
@@ -207,9 +237,12 @@ public class BusinessMain extends BaseActivity {
                 TimePickerDialog t1 = new TimePickerDialog(BusinessMain.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        endTime.setText(i + ":" + i1);
+
                         finalCalenderEnd.set(Calendar.HOUR_OF_DAY, i);
                         finalCalenderEnd.set(Calendar.MINUTE, i1);
+                        String minutes = finalCalenderEnd.get(Calendar.MINUTE) < 10 ? "0" +
+                                finalCalenderEnd.get(Calendar.MINUTE) : "" + finalCalenderEnd.get(Calendar.MINUTE);
+                        endTime.setText(finalCalenderEnd.get(Calendar.HOUR_OF_DAY)+ ":" +minutes);
 
 
                     }
