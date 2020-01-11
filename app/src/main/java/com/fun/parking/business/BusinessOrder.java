@@ -27,7 +27,7 @@ import java.util.Date;
 public class BusinessOrder extends BaseActivity {
  private Button takePhoto;
  private ImageView showPhoto;
- private static final int CAMERA_REQUEST_CODE=1;
+ private static final int CAMERA_REQUEST_CODE = 20;
  private StorageReference mStorage;
  private ProgressDialog mProgress;
  private String currentPhotoPath;

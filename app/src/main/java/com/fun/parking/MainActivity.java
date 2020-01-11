@@ -27,6 +27,13 @@ public class MainActivity extends BaseActivity {
 
         ActivityCompat.requestPermissions(this, new
                 String[]{Manifest.permission.ACCESS_FINE_LOCATION},99);
+        ActivityCompat.requestPermissions(this, new
+                String[]{Manifest.permission.CAMERA},20);
+        ActivityCompat.requestPermissions(this, new
+                String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},21);
+
+
+
 
 
         mFind.setOnClickListener(new View.OnClickListener() {

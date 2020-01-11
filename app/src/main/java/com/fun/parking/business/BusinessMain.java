@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -19,7 +18,6 @@ import androidx.annotation.NonNull;
 
 import com.fun.parking.BaseActivity;
 import com.fun.parking.R;
-import com.fun.parking.customer.Orders;
 import com.fun.parking.customfonts.MyEditText;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;

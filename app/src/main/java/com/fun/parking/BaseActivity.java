@@ -10,6 +10,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.fun.parking.customer.HistoryOrdersActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
@@ -69,23 +71,29 @@ public class BaseActivity extends AppCompatActivity {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         // set item as selected to persist highlight
-                        menuItem.setChecked(true);
-                        Intent intent=null;
+                        Intent intent = null;
                         switch (menuItem.getItemId()) {
 
-                            case R.id.nav_profile: {
+                            case R.id.nav_profile:
                                  intent = new Intent(getBaseContext(), UserProfile.class);
-                                startActivity(intent);
-                                //  f1.beginTransaction().replace(R.id.fragment_container,v).commit();
-                            }
-                            break;
+                                break;
+
                             case R.id.Contact_us:
                                  intent = new Intent(getBaseContext(), ContactForm.class);
-                                startActivity(intent);
+                                break;
 
+                            case R.id.orderHistory:
+                                intent = new Intent(getBaseContext(), HistoryOrdersActivity.class);
+                                break;
                         }
 
-                        fullView.closeDrawer(GravityCompat.START);
+                        if (intent != null)
+                        {
+                            menuItem.setChecked(true);
+                            startActivity(intent);
+                            fullView.closeDrawer(GravityCompat.START);
+                        }
+
                         return true;
                     }
                 });

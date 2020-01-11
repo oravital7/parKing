@@ -14,7 +14,7 @@ import com.fun.parking.BaseActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class Orders extends BaseActivity {
+public class OrderSummaryActivity extends BaseActivity {
     private TextView orders,mCity, mStreet, mStartTime,mEndTime, mDates,mPrice;
     private Button mMenu;
     private FirebaseAuth fAuth;
