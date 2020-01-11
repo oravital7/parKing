@@ -28,8 +28,7 @@
         </provider>
         <activity
             android:name=".business.BusinessOrder"
-            android:label="@string/title_activity_base"
-             />
+            android:label="@string/title_activity_base" />
         <activity
             android:name=".ContactForm"
             android:label="@string/title_activity_base"
@@ -46,11 +45,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UserProfile" />
-
+            android:name=".UserProfile"
+            android:exported="true" />
         <activity
-            android:name=".Registration" />
-
+            android:name=".Registration"
+            android:exported="true" />
 
         <activity
             android:name=".business.BusinessMain" />
