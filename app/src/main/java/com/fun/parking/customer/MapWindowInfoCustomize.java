@@ -23,6 +23,9 @@ public class MapWindowInfoCustomize implements GoogleMap.InfoWindowAdapter {
     @Override
     public View getInfoContents(Marker marker)
     {
+        if (marker.getTag().equals("currentLocation"))
+            return null;
+
         View view = ((Activity)context).getLayoutInflater()
                 .inflate(R.layout.customer_map_window_info_customize, null);
 
