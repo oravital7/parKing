@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.fun.parking.BaseActivity;
 import com.fun.parking.customfonts.MyEditText;
@@ -27,7 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Registration extends BaseActivity {
+public class Registration extends AppCompatActivity {
     public static final String TAG = "TAG";
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
