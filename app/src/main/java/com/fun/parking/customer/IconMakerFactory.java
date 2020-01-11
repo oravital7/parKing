@@ -10,17 +10,17 @@ import com.google.maps.android.ui.IconGenerator;
 
 public class IconMakerFactory {
 
-    private IconGenerator iconFactory;
+//    private IconGenerator iconFactory;
+//
+//    public IconMakerFactory(IconGenerator iconFactory) {
+//        this.iconFactory = iconFactory;
+//        init();
+//    }
 
-    public IconMakerFactory(IconGenerator iconFactory) {
-        this.iconFactory = iconFactory;
-        init();
-    }
-
-    private void init()
-    {
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-    }
+//    private void init()
+//    {
+//        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
+//    }
 
     public MarkerOptions CreateIcon(QueryDocumentSnapshot document)
     {

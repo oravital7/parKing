@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Linear Layout with vertical orientation and other properties -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bc_login" >
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
@@ -8,12 +13,11 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bc_login"
+    android:background="@drawable/bc_login_glass"
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:padding="15dp"
     tools:context=".Login">
-
 
     <TextView
         android:id="@+id/orderDit"
@@ -85,3 +89,4 @@
         android:textColor="#fff" />
 
 </LinearLayout>
+    </FrameLayout>

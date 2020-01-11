@@ -274,7 +274,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     {
         mMap.clear();
 
-        final IconMakerFactory iconMaker = new IconMakerFactory(new IconGenerator(this));
+        final IconMakerFactory iconMaker = new IconMakerFactory();
 
         MapWindowInfoCustomize customInfoWindow = new MapWindowInfoCustomize(this);
         mMap.setInfoWindowAdapter(customInfoWindow);
