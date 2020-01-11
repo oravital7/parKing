@@ -27,6 +27,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import org.w3c.dom.Document;
 
@@ -49,6 +50,7 @@ public class UserProfile extends BaseActivity{
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_user_profile);
+
         phone = findViewById(R.id.profilePhone);
         fullName = findViewById(R.id.profileName);
         email    = findViewById(R.id.profileEmail);
@@ -57,6 +59,10 @@ public class UserProfile extends BaseActivity{
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        fStore.setFirestoreSettings(settings);
         userId = fAuth.getCurrentUser().getUid();
 
 
