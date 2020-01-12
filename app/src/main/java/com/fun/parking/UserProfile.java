@@ -4,11 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,6 +35,8 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import org.w3c.dom.Document;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -45,15 +49,15 @@ public class UserProfile extends BaseActivity{
     FirebaseFirestore fStore;
     String userId;
     Button logout;
-
+    CircleImageView img;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_user_profile);
+        img= findViewById(R.id.profile_image);
 
-        changeImg = findViewById(R.id.changeProfilePic);
         phone = findViewById(R.id.profilePhone);
         fullName = findViewById(R.id.profileName);
         email    = findViewById(R.id.profileEmail);
@@ -96,31 +100,33 @@ public class UserProfile extends BaseActivity{
             }
         });
 
-//        changeImg.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
-//                // Sets the type as image/*. This ensures only components of type image are selected
-//                intent.setType("image/*");
-//                startActivityForResult(Intent.createChooser(intent, "pick an image"), requestCode 1);
-//            }
-//        });
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
+                // Sets the type as image/*. This ensures only components of type image are selected
+                intent.setType("image/*");
+                startActivityForResult(Intent.createChooser(intent, "pick an image"), 1);
+            }
+        });
 
 
     }
-//    @Override
-//    protected void onActivityResult(int requestCode,int resultCode,Intent data)
-//    {
-//        // Result code is RESULT_OK only if the user selects an Image
-//        if (resultCode == RESULT_OK&&requestCode==1)
-//            switch (requestCode){
-//                case GALLERY_REQUEST_CODE:
-//                    //data.getData returns the content URI for the selected Image
-//                    Uri selectedImage = data.getData();
-//                    imageView.setImageURI(selectedImage);
-//                    break;
-//            }
-//    }
+    @Override
+    protected void onActivityResult(int requestCode,int resultCode,Intent data) {
+        // Result code is RESULT_OK only if the user selects an Image
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == 1) {
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(data.getData());
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                img.setImageBitmap(bitmap);
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
 
 
