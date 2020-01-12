@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -19,7 +18,6 @@ import androidx.annotation.NonNull;
 
 import com.fun.parking.BaseActivity;
 import com.fun.parking.R;
-import com.fun.parking.customer.Orders;
 import com.fun.parking.customfonts.MyEditText;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,6 +29,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.GeoPoint;
 
 import java.io.IOException;
@@ -52,7 +51,10 @@ public class BusinessMain extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.business_main);
-
+        final FirebaseFirestore fStore = FirebaseFirestore.getInstance();        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        fStore.setFirestoreSettings(settings);
         final Button okB=findViewById(R.id.okButton);
         final MyEditText startDate=findViewById(R.id.StartDateText);
         startDate.setText(cal.get(Calendar.DAY_OF_MONTH)+"/"+cal.get(Calendar.MONTH)+1+"/"+cal.get(Calendar.YEAR));
@@ -68,7 +70,7 @@ public class BusinessMain extends BaseActivity {
         final MyEditText houseNumber=findViewById(R.id.houseNumberText);
         final MyEditText price=findViewById(R.id.priceText);
         final FirebaseAuth fAuth = FirebaseAuth.getInstance();
-        final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
+
         userID = fAuth.getCurrentUser().getUid();
         DocumentReference documentReference = fStore.collection("users").document(userID);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {

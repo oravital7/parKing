@@ -13,8 +13,9 @@ import com.fun.parking.R;
 import com.fun.parking.BaseActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
-public class Orders extends BaseActivity {
+public class OrderSummaryActivity extends BaseActivity {
     private TextView orders,mCity, mStreet, mStartTime,mEndTime, mDates,mPrice;
     private Button mMenu;
     private FirebaseAuth fAuth;
@@ -35,6 +36,10 @@ public class Orders extends BaseActivity {
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        fStore.setFirestoreSettings(settings);
         userId = fAuth.getCurrentUser().getUid();
  //       mParkingID = getIntent().getStringExtra("ParkingID");
 

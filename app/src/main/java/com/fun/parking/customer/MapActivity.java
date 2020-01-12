@@ -41,9 +41,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.maps.android.ui.IconGenerator;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
@@ -57,7 +57,6 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private FirebaseFirestore mFstore;
     private FirebaseAuth mFAuth;
-    private FusedLocationProviderClient mfusedLocationClient;
     private Calendar mStartDate, mEndDate;
     private String userId, StringStartDate, StringEndDate;
 
@@ -69,8 +68,11 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.customer_activity_maps);
-        mfusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mFstore = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        mFstore.setFirestoreSettings(settings);
         resetTimes();
 
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -201,13 +203,12 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
             public void onInfoWindowClick(Marker marker) {
                 Toast.makeText(MapActivity.this, "Parking id: " + marker.getTitle(),
                         Toast.LENGTH_LONG).show();
-                mFstore = FirebaseFirestore.getInstance();
                 mFAuth = FirebaseAuth.getInstance();
                 userId = mFAuth.getCurrentUser().getUid();
                 final String parkingId=marker.getTitle();
                 //update the firebase
                 boolean taken=false;
-                final Intent intent = new Intent(getApplicationContext(), Orders.class);
+                final Intent intent = new Intent(getApplicationContext(), OrderSummaryActivity.class);
                 long hoursDiff[] = getHours();
                 final double pricePerHour = Double.parseDouble(marker.getSnippet());
                 final double totalPrice = pricePerHour * (hoursDiff[0] + hoursDiff[1] / 60.0);
@@ -281,7 +282,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful())
+                        if (task.isSuccessful() && task.getResult() != null)
                         {
                             int parkingSum = 0;
                             for (QueryDocumentSnapshot document : task.getResult())
