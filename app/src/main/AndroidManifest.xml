@@ -7,10 +7,9 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <uses-permission-sdk-23 android:name="android.permission.CAMERA" />
-
     <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -19,9 +18,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".customer.HistoryOrdersActivity"
-            android:exported="true"
-            ></activity>
+        <activity android:name=".CitiesPrices" android:exported="true"></activity>
+        <activity
+            android:name=".customer.HistoryOrdersActivity"
+            android:exported="true" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -50,7 +50,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UserProfile" android:exported="true" />
+        <activity
+            android:name=".UserProfile"
+            android:exported="true" />
         <activity android:name=".Registration" />
         <activity android:name=".business.BusinessMain" />
         <activity android:name=".customer.OrderSummaryActivity" />

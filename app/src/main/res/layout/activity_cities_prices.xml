@@ -5,19 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bc_login"
-    tools:context=".customer.HistoryOrdersActivity">
+    tools:context=".CitiesPrices">
 
     <TextView
         android:id="@+id/cityPriceLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
         android:fontFamily="casual"
-        android:text="My Orders"
+        android:text="City Prices"
         android:textAlignment="center"
         android:textSize="36sp"
         android:textStyle="bold"
-        android:typeface="normal"
-        android:layout_margin="10dp"/>
+        android:typeface="normal" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -26,3 +29,4 @@
         android:layout_height="match_parent" />
 
 </RelativeLayout>
+
