@@ -91,6 +91,11 @@ public class BaseActivity extends AppCompatActivity {
                             case R.id.orderHistory:
                                 intent = new Intent(getBaseContext(), HistoryOrdersActivity.class);
                                 break;
+
+                            case  R.id.Logout:
+                                startActivity(new Intent(getApplicationContext(), Login.class));
+                                FirebaseAuth.getInstance().signOut(); // logout
+                                break;
                         }
 
                         if (intent != null)

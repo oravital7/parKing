@@ -2,6 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     //means that you can only choose 1 item at the time from the group
     <group android:checkableBehavior="single">
+
         <item
             android:id="@+id/Contact_us"
 
@@ -28,7 +29,10 @@
 
                 android:title="Send" />
 
+            <item
+                android:id="@+id/Logout"
 
+                android:title="Logout" />
         </menu>
     </item>
 </menu>
