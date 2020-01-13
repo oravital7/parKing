@@ -53,7 +53,8 @@
         <activity
             android:name=".UserProfile"
             android:exported="true" />
-        <activity android:name=".Registration" />
+        <activity android:name=".Registration"
+            android:exported="true"/>
         <activity android:name=".business.BusinessMain" />
         <activity android:name=".customer.OrderSummaryActivity" />
         <activity
