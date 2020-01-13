@@ -76,7 +76,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         resetTimes();
 
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        mCurrentLocation = new LatLng(32.1005821, 34.8817902);
+        mCurrentLocation = new LatLng(32.1039, 35.2082);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
