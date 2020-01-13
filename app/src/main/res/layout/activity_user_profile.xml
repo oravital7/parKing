@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".UserProfile"
-    android:background="@color/gray_holo_light"
+    android:background="@color/darkTorkiz"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -24,7 +24,7 @@
                 android:layout_height="153dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="45dp"
-                android:src="@drawable/photocercle"
+                android:src="@drawable/profile"
                 app:civ_border_color="#FF000000"
                 app:civ_border_width="2dp" />
 

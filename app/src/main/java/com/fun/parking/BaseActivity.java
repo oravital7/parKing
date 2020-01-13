@@ -61,8 +61,8 @@ public class BaseActivity extends AppCompatActivity {
                 if (document.exists())
                 {
                    //set the header with the user's details.
-                    String address=document.getString("address.street");
-                    address+=document.getString("address.houseNumber")+",";
+                    String address=document.getString("address.street")+" ";
+                    address+=document.getString("address.houseNumber")+", ";
                     address+=document.getString("address.city");
                     adr.setText(address);
                     name.setText(document.getString("fName"));
