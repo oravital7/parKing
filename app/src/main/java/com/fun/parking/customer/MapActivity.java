@@ -201,8 +201,6 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Toast.makeText(MapActivity.this, "Parking id: " + marker.getTitle(),
-                        Toast.LENGTH_LONG).show();
                 mFAuth = FirebaseAuth.getInstance();
                 userId = mFAuth.getCurrentUser().getUid();
                 final String parkingId=marker.getTitle();

@@ -24,11 +24,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import android.app.ProgressDialog;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,26 +33,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.w3c.dom.Document;
-
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.UUID;
 
-import javax.annotation.Nullable;
+
 
 //public class UserProfile extends AppCompatActivity {
 public class UserProfile extends BaseActivity{
@@ -67,7 +54,6 @@ public class UserProfile extends BaseActivity{
     CircleImageView img;
     private Uri filePath;
     FirebaseStorage storage;
-    StorageReference storageReference;
     private final int PICK_IMAGE_REQUEST = 22;
 
     @Override
@@ -86,7 +72,6 @@ public class UserProfile extends BaseActivity{
         fStore = FirebaseFirestore.getInstance();
     // get the Firebase  storage reference
         storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
 
 
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
@@ -113,28 +98,34 @@ public class UserProfile extends BaseActivity{
             }
         });
 
-        storageReference = storage.getReference().child("profilePhotos/").child(userId);
+
+//ZtfjDvEIH2Nq28OC9SSMk3lG5a23
+//
+//        String url ="https://firebasestorage.googleapis.com/v0/b/parking-f2ba9.appspot.com/o/profilePhotos%2F"+userId+"?alt=media&token=eca7dd5b-23aa-4f16-b447-23c2d86ca05d";
+//        String url=storageReference+"profilePhotos/"+userId;
+//        Uri uri = storageReference.child("profilePhotos/").child(userId).getDownloadUrl();
+//        Glide.with(getApplicationContext()).load(storageReference.child("profilePhotos/").child(userId)).into(img);
+//        Toast.makeText(this,storageReference.child("profilePhotos").child(userId)+"",Toast.LENGTH_LONG).show();
+//        Glide.with(img.getContext()).load(url).placeholder(R.drawable.profile).dontAnimate().into(img);
+
+
+        StorageReference storageReference = storage.getReference().child("profilePhotos/").child(userId);
 
         storageReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
                 if(task.isSuccessful())
                 {
-                    Toast.makeText(UserProfile.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-
-                    Glide.with(UserProfile.this)
-                            .load(task.getResult())
-                            .apply(RequestOptions.circleCropTransform())
-                            .into(img);
-
-                }
-                else {
-                    Toast.makeText(UserProfile.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    if (task.getResult() != null) {
+                        Glide.with(UserProfile.this)
+                                .load(task.getResult())
+                                .placeholder(R.drawable.profile)
+                                .apply(RequestOptions.circleCropTransform())
+                                .into(img);
+                    }
                 }
             }
         });
-
-
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,7 +206,7 @@ public class UserProfile extends BaseActivity{
 
             // Defining the child of storageReference
             StorageReference ref
-                    = storageReference
+                    = storage.getReference()
                     .child(
                             "profilePhotos/"
                                     + userId);

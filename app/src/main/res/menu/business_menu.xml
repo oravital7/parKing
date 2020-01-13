@@ -4,10 +4,6 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:id="@+id/Contact_us"
-
-            android:title="Contact us" />
-        <item
             android:id="@+id/orderHistory"
 
             android:title="My orders" />
@@ -15,6 +11,11 @@
             android:id="@+id/nav_profile"
 
             android:title="Profile" />
+
+        <item
+            android:id="@+id/Logout"
+
+            android:title="Logout" />
 
     </group>
     <item android:title="Communicate">
@@ -25,14 +26,10 @@
                 android:title="Share" />
 
             <item
-                android:id="@+id/nav_send"
+                android:id="@+id/Contact_us"
 
-                android:title="Send" />
+                android:title="Contact us" />
 
-            <item
-                android:id="@+id/Logout"
-
-                android:title="Logout" />
         </menu>
     </item>
 </menu>

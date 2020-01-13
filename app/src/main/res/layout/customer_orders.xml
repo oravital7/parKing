@@ -8,7 +8,6 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
@@ -27,6 +26,7 @@
         android:text="Order details"
         android:textAlignment="center"
         android:textSize="30sp"
+        android:textColor="#fff"
         android:textStyle="bold" />
 
     <TextView
@@ -36,7 +36,7 @@
         android:layout_margin="15dp"
         android:text="TextView"
         android:textStyle="bold"
-        android:textColor="@color/places_text_black_alpha_87"
+        android:textColor="#fff"
         android:textSize="18sp" />
 
     <TextView
@@ -46,7 +46,7 @@
         android:layout_margin="15dp"
         android:text="TextView"
         android:textStyle="bold"
-        android:textColor="@color/places_text_black_alpha_87"
+        android:textColor="#fff"
         android:textSize="18sp" />
 
     <TextView
@@ -56,7 +56,7 @@
         android:layout_height="wrap_content"
         android:text="TextView"
         android:textStyle="bold"
-        android:textColor="@color/places_text_black_alpha_87"
+        android:textColor="#fff"
         android:textSize="18sp" />
 
     <TextView
@@ -66,7 +66,7 @@
         android:layout_height="wrap_content"
         android:text="TextView"
         android:textStyle="bold"
-        android:textColor="@color/places_text_black_alpha_87"
+        android:textColor="#fff"
         android:textSize="18sp" />
 
     <TextView
@@ -76,7 +76,7 @@
         android:layout_height="wrap_content"
         android:text="TextView"
         android:textStyle="bold"
-        android:textColor="@color/places_text_black_alpha_87"
+        android:textColor="#fff"
         android:textSize="18sp" />
 
     <Button
