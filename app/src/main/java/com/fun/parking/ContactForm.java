@@ -6,6 +6,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,7 +69,6 @@ public class ContactForm extends BaseActivity {
                         "name:"+name+'\n'+"Email ID:"+email+'\n'+"Message:"+'\n'+message);
 
                 startActivity(Intent.createChooser(sendEmail, "Send mail..."));
-
 
             }
         });

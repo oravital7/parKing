@@ -17,37 +17,40 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image_menu"
-            android:layout_width="173dp"
-            android:layout_height="86dp"
+            android:layout_width="wrap_content"
+            android:layout_height="113dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="220dp"
             android:layout_marginEnd="18dp"
-            android:layout_marginBottom="70dp"
-            android:src="@drawable/profile"
-           />
+            android:layout_marginBottom="43dp"
+            android:src="@drawable/profile" />
 
         <TextView
             android:id="@+id/nameProfile"
-            android:layout_width="226dp"
-            android:layout_height="53dp"
-            android:layout_alignParentEnd="true"
+            android:layout_width="261dp"
+            android:layout_height="35dp"
+            android:layout_alignEnd="@+id/profile_image_menu"
+            android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="26dp"
-            android:layout_marginBottom="63dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="129dp"
+            android:layout_marginBottom="94dp"
             android:paddingTop="6dp"
             android:text="Ariel Bar"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
         <TextView
             android:id="@+id/AddressProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="321dp"
+            android:layout_height="31dp"
+            android:layout_alignTop="@+id/nameProfile"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="98dp"
-            android:layout_marginBottom="63dp"
+            android:layout_marginTop="44dp"
+            android:layout_marginEnd="76dp"
+            android:layout_marginBottom="54dp"
             android:text="Address: Yael Rom 13,Tel-Aviv" />
     </RelativeLayout>
 </RelativeLayout>
