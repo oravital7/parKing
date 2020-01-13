@@ -102,17 +102,6 @@ public class UserProfile extends BaseActivity{
             }
         });
 
-
-//ZtfjDvEIH2Nq28OC9SSMk3lG5a23
-//
-//        String url ="https://firebasestorage.googleapis.com/v0/b/parking-f2ba9.appspot.com/o/profilePhotos%2F"+userId+"?alt=media&token=eca7dd5b-23aa-4f16-b447-23c2d86ca05d";
-//        String url=storageReference+"profilePhotos/"+userId;
-//        Uri uri = storageReference.child("profilePhotos/").child(userId).getDownloadUrl();
-//        Glide.with(getApplicationContext()).load(storageReference.child("profilePhotos/").child(userId)).into(img);
-//        Toast.makeText(this,storageReference.child("profilePhotos").child(userId)+"",Toast.LENGTH_LONG).show();
-//        Glide.with(img.getContext()).load(url).placeholder(R.drawable.profile).dontAnimate().into(img);
-
-
         StorageReference storageReference = storage.getReference().child("profilePhotos/").child(userId);
 
         storageReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {

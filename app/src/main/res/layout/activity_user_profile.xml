@@ -15,7 +15,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="380dp"
-            android:background="@drawable/gradientbackground"
+            android:background="@drawable/bc_login"
             android:orientation="vertical">
 
             <de.hdodenhof.circleimageview.CircleImageView
