@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,6 +25,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import android.app.ProgressDialog;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -108,10 +113,28 @@ public class UserProfile extends BaseActivity{
             }
         });
 
-        Glide.with(this /* context */)
-                .using(new FirebaseImageLoader())
-                .load(storageReference)
-                .into(image );
+        storageReference = storage.getReference().child("profilePhotos/").child(userId);
+
+        storageReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if(task.isSuccessful())
+                {
+                    Toast.makeText(UserProfile.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+
+                    Glide.with(UserProfile.this)
+                            .load(task.getResult())
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(img);
+
+                }
+                else {
+                    Toast.makeText(UserProfile.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
