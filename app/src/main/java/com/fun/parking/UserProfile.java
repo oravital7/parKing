@@ -26,6 +26,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.fun.parking.customer.HistoryOrdersActivity;
+import com.fun.parking.customer.OrderSummaryActivity;
+import com.fun.parking.customer.orderHistory.Order;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -46,7 +49,7 @@ import java.io.IOException;
 
 //public class UserProfile extends AppCompatActivity {
 public class UserProfile extends BaseActivity{
-    TextView fullName,email,phone,address, changeImg;
+    TextView fullName,email,phone,address, orders;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userId;
@@ -68,6 +71,7 @@ public class UserProfile extends BaseActivity{
         email    = findViewById(R.id.profileEmail);
         address = findViewById(R.id.address);
         logout = findViewById(R.id.logout);
+        orders = findViewById(R.id.myOrders);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
     // get the Firebase  storage reference
@@ -150,6 +154,12 @@ public class UserProfile extends BaseActivity{
             }
         });
 
+        orders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), HistoryOrdersActivity.class));
+            }
+        });
 
     }
 
