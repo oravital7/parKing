@@ -47,7 +47,7 @@ public class BusinessMain extends BaseActivity {
     private final Calendar finalCalenderEnd = new GregorianCalendar(TimeZone.getTimeZone("Israel"));;
     private int Year, Month, day, hour, Min;
     private final Calendar cal = Calendar.getInstance();
-    private String start,end;
+    private String start,end,timeS,timeE;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.business_main);
@@ -103,6 +103,8 @@ public class BusinessMain extends BaseActivity {
                     final Intent intent = new Intent(getApplicationContext(), BusinessOrder.class);
                     intent.putExtra("startDate", start);
                     intent.putExtra("endDate", end);
+                    intent.putExtra("startTime",timeS);
+                    intent.putExtra("endTime",timeE);
 
 
                     HashMap<String, Object> park = new HashMap<String, Object>();
@@ -224,6 +226,7 @@ public class BusinessMain extends BaseActivity {
                         String minutes = finalCalenderStart.get(Calendar.MINUTE) < 10 ? "0" +
                                 finalCalenderStart.get(Calendar.MINUTE) : "" + finalCalenderStart.get(Calendar.MINUTE);
                         startTime.setText(finalCalenderStart.get(Calendar.HOUR_OF_DAY)+ ":" +minutes);
+                        timeS=finalCalenderStart.get(Calendar.HOUR_OF_DAY)+ ":" +minutes;
 
 
                     }
@@ -245,6 +248,7 @@ public class BusinessMain extends BaseActivity {
                         String minutes = finalCalenderEnd.get(Calendar.MINUTE) < 10 ? "0" +
                                 finalCalenderEnd.get(Calendar.MINUTE) : "" + finalCalenderEnd.get(Calendar.MINUTE);
                         endTime.setText(finalCalenderEnd.get(Calendar.HOUR_OF_DAY)+ ":" +minutes);
+                        timeE=finalCalenderEnd.get(Calendar.HOUR_OF_DAY)+ ":" +minutes;
 
 
                     }

@@ -19,6 +19,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import com.fun.parking.BaseActivity;
+import com.fun.parking.MainActivity;
 import com.fun.parking.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -84,6 +85,14 @@ public class BusinessOrder extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.business_order);
+        Button back=findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
         parkingId = getIntent().getStringExtra("parkingId");
         mProgress = new ProgressDialog(this);
         mStorage = FirebaseStorage.getInstance().getReference();
@@ -104,13 +113,11 @@ public class BusinessOrder extends BaseActivity {
         });
         String start = getIntent().getStringExtra("startDate");
         String end = getIntent().getStringExtra("endDate");
-        final TextView info = (TextView) findViewById(R.id.info1);
-        final TextView info1 = (TextView) findViewById(R.id.info2);
+        final TextView info1 = (TextView) findViewById(R.id.info1);
         final TextView info3 = (TextView) findViewById(R.id.info3);
-        String good = "You offer your parking spot between:\n";
-        info.setText(start);
-        info1.setText(good);
-        info3.setText(end);
+        info1.setText("from: "+start+","+getIntent().getStringExtra("startTime"));
+        info3.setText("to: "+end+","+getIntent().getStringExtra("endTime"));
+
 
     }
 
@@ -160,7 +167,7 @@ public class BusinessOrder extends BaseActivity {
 
                             });
 
-                   // Toast.makeText(BusinessOrder.this, "Uploading finished...", Toast.LENGTH_LONG).show();
+                 
 
                 }
             })
