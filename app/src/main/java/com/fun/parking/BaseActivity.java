@@ -104,6 +104,9 @@ public class BaseActivity extends AppCompatActivity {
                                 startActivity(new Intent(getApplicationContext(), Login.class));
                                 FirebaseAuth.getInstance().signOut(); // logout
                                 break;
+                            case  R.id.Home:
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                break;
                         }
 
                         if (intent != null)
